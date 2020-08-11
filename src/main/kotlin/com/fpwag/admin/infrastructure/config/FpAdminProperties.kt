@@ -9,8 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
  *
  * @author fpwag
  */
-@ConfigurationProperties(prefix = "sso")
-class SsoProperties {
+@ConfigurationProperties(prefix = "fp-admin")
+class FpAdminProperties {
     companion object {
         private val ENDPOINTS = arrayOf(
                 "/favicon.ico",

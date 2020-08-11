@@ -4,7 +4,7 @@ import cn.hutool.captcha.LineCaptcha
 import cn.hutool.captcha.generator.MathGenerator
 import com.fpwag.admin.domain.dto.output.ImageCodeVO
 import com.fpwag.admin.domain.dto.input.LoginUser
-import com.fpwag.admin.infrastructure.config.SsoProperties
+import com.fpwag.admin.infrastructure.config.FpAdminProperties
 import com.fpwag.admin.infrastructure.security.token.service.TokenService
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.core.utils.IdUtils
@@ -26,7 +26,7 @@ class AuthService {
     }
 
     @Autowired
-    private lateinit var properties: SsoProperties
+    private lateinit var properties: FpAdminProperties
     @Autowired
     private lateinit var tokenService: TokenService
     @Autowired

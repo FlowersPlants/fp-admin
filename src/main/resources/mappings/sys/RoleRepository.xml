@@ -3,8 +3,8 @@
 <mapper namespace="com.fpwag.admin.domain.repository.RoleRepository">
     <select id="selectByUserId" resultType="Role">
         select a.*
-        from sys_role a left join sys_user u on u.role_id = a.id
-        where a.enabled = 1 and u.id = #{userId}
+        from sys_role a left join sys_role_user ru on ru.role_id = a.id
+        where a.enabled = 1 and ru.user_id = #{userId}
     </select>
 
     <insert id="insertBatchMenuRecord" parameterType="com.fpwag.admin.domain.dto.input.command.RoleAuthCmd">

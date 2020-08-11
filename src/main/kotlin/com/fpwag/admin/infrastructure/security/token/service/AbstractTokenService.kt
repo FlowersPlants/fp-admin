@@ -1,6 +1,6 @@
 package com.fpwag.admin.infrastructure.security.token.service
 
-import com.fpwag.admin.infrastructure.config.SsoProperties
+import com.fpwag.admin.infrastructure.config.FpAdminProperties
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Clock
 import io.jsonwebtoken.Jwts
@@ -9,7 +9,7 @@ import io.jsonwebtoken.impl.DefaultClock
 import java.util.*
 import java.util.function.Function
 
-abstract class AbstractTokenService(private var properties: SsoProperties) : TokenService {
+abstract class AbstractTokenService(private var properties: FpAdminProperties) : TokenService {
     private val jwt = this.properties.jwt
     protected val clock: Clock = DefaultClock.INSTANCE
 

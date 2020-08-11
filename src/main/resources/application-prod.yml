@@ -46,7 +46,7 @@ fpwag-boot:
         ttl: 259200000 # 3天
     global-ttl: 86400000 # 全局过期时间设置 1天
 
-sso:
+fp-admin:
   image-code:
     enable: true
   cors:

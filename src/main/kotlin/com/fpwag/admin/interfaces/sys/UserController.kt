@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiImplicitParams
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -52,6 +53,7 @@ class UserController {
     @SystemLog(value = "用户分页", type = SystemLog.Type.QUERY)
     @ApiOperation("用户管理分页接口")
     @GetMapping
+    @PreAuthorize("@pms.hasPermission('sys:user:list')")
     fun findPage(user: UserQuery?, pageable: Pageable): Any? {
         return this.service.findPage(user, pageable)
     }
@@ -62,6 +64,7 @@ class UserController {
     @SystemLog(value = "新增用户", type = SystemLog.Type.INSERT)
     @ApiOperation("新增接口")
     @PostMapping
+    @PreAuthorize("@pms.hasPermission('sys:user:add')")
     fun insert(@Validated @RequestBody command: UserAddCmd): Any? {
         return this.service.save(command)
     }
@@ -72,6 +75,7 @@ class UserController {
     @SystemLog(value = "修改用户信息", type = SystemLog.Type.UPDATE)
     @ApiOperation("修改接口")
     @PutMapping
+    @PreAuthorize("@pms.hasPermission('sys:user:edit')")
     fun update(@Validated @RequestBody command: UserEditCmd): Any? {
         return this.service.update(command)
     }
@@ -82,6 +86,7 @@ class UserController {
     @SystemLog(value = "批量删除用户", type = SystemLog.Type.DELETE)
     @ApiOperation("逻辑删除接口")
     @DeleteMapping
+    @PreAuthorize("@pms.hasPermission('sys:user:del')")
     fun delete(@RequestBody ids: MutableSet<String>): Any? {
         return this.service.delete(ids)
     }

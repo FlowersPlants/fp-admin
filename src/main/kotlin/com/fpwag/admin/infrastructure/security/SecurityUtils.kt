@@ -1,6 +1,5 @@
 package com.fpwag.admin.infrastructure.security
 
-import com.fpwag.admin.infrastructure.CommonConstant
 import org.springframework.security.core.context.SecurityContextHolder
 
 /**
@@ -47,17 +46,6 @@ object SecurityUtils {
      * @return true-是
      */
     fun isAdmin(): Boolean {
-        return isAdmin(getUserId(), getSecurityUser()?.roleId)
-    }
-
-    /**
-     * 判断用户是否是超级管理员（角色和用户id都是1）
-     *
-     * @param userId 用户id
-     * @param roleId 角色id
-     * @return true-是
-     */
-    private fun isAdmin(userId: String?, roleId: String?): Boolean {
-        return userId == CommonConstant.ADMIN_ID && roleId == CommonConstant.ADMIN_ID
+        return getSecurityUser()?.admin ?: false
     }
 }

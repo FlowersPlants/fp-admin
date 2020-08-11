@@ -5,9 +5,10 @@ package com.fpwag.admin.infrastructure.security.token
  *
  * @author fpwag
  */
-data class UserInfo(var id: String, var roleId: String, var username: String, var password: String) {
+data class UserInfo(var id: String, var deptId: String, var username: String, var password: String) {
     var avatar: String? = null
     var email: String? = null
     var mobile: String? = null
     var lockFlag: Boolean? = null
+    var admin: Boolean = false // 当前用户是否是超级管理员
 }

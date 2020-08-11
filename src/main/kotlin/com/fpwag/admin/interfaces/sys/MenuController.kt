@@ -5,8 +5,10 @@ import com.fpwag.admin.domain.dto.input.command.MenuEditCmd
 import com.fpwag.admin.domain.dto.input.query.MenuQuery
 import com.fpwag.admin.domain.dto.output.MenuDto
 import com.fpwag.admin.domain.dto.output.MenuTree
+import com.fpwag.admin.domain.entity.Menu
 import com.fpwag.admin.domain.service.MenuService
 import com.fpwag.boot.core.constants.CommonConstants
+import com.fpwag.boot.data.mybatis.PageResult
 import com.fpwag.boot.logging.annotation.SystemLog
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -58,7 +60,7 @@ class MenuController {
     fun findMenus(query: MenuQuery?): Any {
         val list = this.service.findList(query)
         val records = this.service.buildTree(list, parentId = query?.parentId ?: CommonConstants.ROOT_PARENT_ID)
-        return mutableMapOf("records" to records, "total" to records.size)
+        return PageResult.of<Menu, MenuTree>(records.size, records)
     }
 
     @PreAuthorize("@pms.hasPermission('fun:sys:menu:add')")

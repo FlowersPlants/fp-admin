@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
-    private lateinit var properties: SsoProperties
+    private lateinit var properties: FpAdminProperties
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 

@@ -16,16 +16,26 @@ class SecurityUser : User {
 
     var id: String
 
-    var roleId: String
+    /**
+     * 部门id
+     */
+    var deptId: String
 
-    constructor(id: String, roleId: String, username: String, password: String, authorities: List<GrantedAuthority>) : super(username, password, authorities) {
+    /**
+     * 当前登录用户是否是超级管理员（自动拥有所有权限）
+     */
+    var admin: Boolean = false
+
+    constructor(id: String, deptId: String, admin: Boolean, username: String, password: String, authorities: List<GrantedAuthority>) : super(username, password, authorities) {
         this.id = id
-        this.roleId = roleId
+        this.deptId = deptId
+        this.admin = admin
     }
 
-    constructor(id: String, roleId: String, username: String, password: String, enabled: Boolean, accountNonExpired: Boolean, credentialsNonExpired: Boolean, accountNonLocked: Boolean, authorities: List<GrantedAuthority>)
+    constructor(id: String, deptId: String, admin: Boolean, username: String, password: String, enabled: Boolean, accountNonExpired: Boolean, credentialsNonExpired: Boolean, accountNonLocked: Boolean, authorities: List<GrantedAuthority>)
             : super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities) {
         this.id = id
-        this.roleId = roleId
+        this.deptId = deptId
+        this.admin = admin
     }
 }

@@ -10,12 +10,12 @@ import com.fpwag.boot.data.mybatis.model.WholeModel
  * @since v1
  */
 @TableName("sys_user")
-open class User() : WholeModel() {
+open class User : WholeModel() {
     companion object {
         private const val serialVersionUID = CommonConstant.SERIAL_VERSION
     }
 
-    var roleId: String? = null
+    var deptId: String? = null
 
     /**
      * 用户账号，唯一

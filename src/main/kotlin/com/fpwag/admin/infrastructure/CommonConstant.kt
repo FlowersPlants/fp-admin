@@ -21,15 +21,12 @@ object CommonConstant {
     const val DEFAULT_SUBJECT = "subject"
 
     // redis key
-    const val IMG_CODE_KEY = "sso-img-code-"
-    const val SMS_CODE_KEY = "sso-sms-code-"
+    const val IMG_CODE_KEY = "img-code-"
+    const val SMS_CODE_KEY = "sms-code-"
 
     // cors
     const val ALLOW_METHODS = "GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS, PATCH"
     const val EXPOSE_HEADERS = "Location"
-
-    // other
-    const val ADMIN_ID = "1" // 超级管理员的用户id和角色id都是1
 
     /**
      * 统一管理的序列化号

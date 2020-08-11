@@ -1,6 +1,6 @@
 package com.fpwag.admin.infrastructure.security.filter
 
-import com.fpwag.admin.infrastructure.config.SsoProperties
+import com.fpwag.admin.infrastructure.config.FpAdminProperties
 import com.fpwag.admin.infrastructure.security.SecurityUser
 import com.fpwag.admin.infrastructure.security.token.service.TokenService
 import com.fpwag.boot.core.exception.Assert
@@ -22,11 +22,11 @@ import javax.servlet.http.HttpServletResponse
  * @author FlowersPlants
  * @since v1
  */
-class SecurityAuthorizationFilter(private var properties: SsoProperties) : OncePerRequestFilter() {
+class SecurityAuthorizationFilter(private var properties: FpAdminProperties) : OncePerRequestFilter() {
     @Autowired
     private lateinit var tokenService: TokenService
 
-    private var jwt: SsoProperties.JwtProperties = this.properties.jwt
+    private var jwt: FpAdminProperties.JwtProperties = this.properties.jwt
 
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         this.properties.ignoreUrls.forEach {
@@ -59,7 +59,7 @@ class SecurityAuthorizationFilter(private var properties: SsoProperties) : OnceP
 
         val info = user!!.userInfo
         val authorities = AuthorityUtils.createAuthorityList(*(user.authorities.toTypedArray()))
-        val securityUser = SecurityUser(info.id, info.roleId, info.username, info.password, authorities)
+        val securityUser = SecurityUser(info.id, info.deptId, info.admin, info.username, info.password, authorities)
         return UsernamePasswordAuthenticationToken(securityUser, info.password, authorities)
     }
 }

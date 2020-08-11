@@ -9,7 +9,7 @@ import com.fpwag.boot.data.mybatis.dto.BaseQuery
  * @author fpwag
  */
 class UserQuery : BaseQuery() {
-    var roleId: String? = null
+    var deptId: String? = null
     var username: String? = null
     var email: String? = null
     var mobile: String? = null

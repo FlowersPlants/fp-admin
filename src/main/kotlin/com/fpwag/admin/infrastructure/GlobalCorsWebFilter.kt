@@ -1,6 +1,6 @@
 package com.fpwag.admin.infrastructure
 
-import com.fpwag.admin.infrastructure.config.SsoProperties
+import com.fpwag.admin.infrastructure.config.FpAdminProperties
 import org.springframework.core.Ordered
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse
  *
  * @author fpwag
  */
-class GlobalCorsWebFilter(private var cors: SsoProperties.Cors) : OncePerRequestFilter(), Ordered {
+class GlobalCorsWebFilter(private var cors: FpAdminProperties.Cors) : OncePerRequestFilter(), Ordered {
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         val method = HttpMethod.resolve(request.method)
         if (logger.isDebugEnabled) {

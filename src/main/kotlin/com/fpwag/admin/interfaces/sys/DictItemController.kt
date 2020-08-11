@@ -9,6 +9,7 @@ import com.fpwag.boot.logging.annotation.SystemLog
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -38,6 +39,7 @@ class DictItemController {
     @SystemLog(value = "新增字典信息", type = SystemLog.Type.INSERT)
     @ApiOperation("字典管理新增接口")
     @PostMapping
+    @PreAuthorize("@pms.hasPermission('sys:dict:add')")
     fun add(@Validated @RequestBody command: DictItemAddCmd): Any? {
         return this.service.save(command)
     }
@@ -45,6 +47,7 @@ class DictItemController {
     @SystemLog(value = "根据id更新字典信息", type = SystemLog.Type.UPDATE)
     @ApiOperation("字典管理编辑接口")
     @PutMapping
+    @PreAuthorize("@pms.hasPermission('sys:dict:edit')")
     fun edit(@Validated @RequestBody command: DictItemEditCmd): Any? {
         return this.service.update(command)
     }
@@ -52,6 +55,7 @@ class DictItemController {
     @SystemLog(value = "批量删除字典", type = SystemLog.Type.DELETE)
     @ApiOperation("字典管理逻辑删除接口")
     @DeleteMapping
+    @PreAuthorize("@pms.hasPermission('sys:dict:del')")
     fun delete(@RequestBody ids: MutableSet<String>): Any? {
         return this.service.delete(ids)
     }

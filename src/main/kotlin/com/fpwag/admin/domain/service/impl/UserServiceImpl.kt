@@ -54,8 +54,8 @@ class UserServiceImpl : UserService {
                     this.or()
                     this.likeRight("remarks", it.keyword)
                 }
-                if (!it.roleId.isNullOrBlank()) {
-                    this.eq("role_id", it.roleId)
+                if (!it.deptId.isNullOrBlank()) {
+                    this.eq("dept_id", it.deptId)
                 }
                 if (!it.username.isNullOrBlank()) {
                     this.likeRight("username", it.username)

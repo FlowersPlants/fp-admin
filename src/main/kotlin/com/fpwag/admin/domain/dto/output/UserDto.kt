@@ -14,7 +14,7 @@ open class UserDto : BaseDTO() {
         private const val serialVersionUID = CommonConstant.SERIAL_VERSION
     }
 
-    var roleId: String? = null
+    var deptId: String? = null
     var username: String? = null
     var name: String? = null
     var avatar: String? = null

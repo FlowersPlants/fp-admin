@@ -53,7 +53,7 @@ fpwag-boot:
       persist: true
       del-object: true
 
-sso:
+fp-admin:
   ignore-urls: /oss/**, /test/** # 仅测试用的
   image-code:
     enable: true

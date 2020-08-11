@@ -31,7 +31,7 @@ class SecurityUserDetailsService : UserDetailsService {
             val info = user.userInfo
             Assert.isTrue(info.lockFlag != true, "用户已禁用，请联系管理员")
 
-            SecurityUser(info.id, info.roleId, info.username, info.password, authorities)
+            SecurityUser(info.id, info.deptId, info.admin, info.username, info.password, authorities)
         }
     }
 }

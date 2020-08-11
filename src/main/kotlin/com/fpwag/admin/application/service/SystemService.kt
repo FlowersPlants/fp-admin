@@ -53,11 +53,13 @@ class SystemService {
         val authorities = mutableListOf(*roles.toTypedArray(), *permissions.toTypedArray())
 
         val password = if (protectedPwd) CommonConstant.PROTECTED_PWD else user.password!!
-        val info = UserInfo(user.id, user.roleId!!, user.username!!, password).apply {
+        val info = UserInfo(user.id, user.deptId!!, user.username!!, password).apply {
             this.avatar = user.avatar
             this.email = user.email
             this.mobile = user.mobile
             this.lockFlag = user.lockFlag
+            // TODO this.admin =
+            this.admin = true
         }
         return TokenInfo(info, authorities)
     }

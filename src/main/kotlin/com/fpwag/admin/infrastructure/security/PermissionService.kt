@@ -10,11 +10,11 @@ class PermissionService {
     /**
      * 判断接口是否有xxx:xxx权限
      *
-     * @param permission 权限
+     * @param permissions 权限
      * @return {boolean}
      */
-    fun hasPermission(permission: String?): Boolean {
-        if (StrUtil.isBlank(permission)) {
+    fun hasPermission(vararg permissions: String): Boolean {
+        if (permissions.isEmpty()) {
             return false
         }
 
@@ -23,6 +23,6 @@ class PermissionService {
         return authorities.stream()
                 .map { obj: GrantedAuthority -> obj.authority }
                 .filter(StrUtil::isNotBlank)
-                .anyMatch { x: String? -> PatternMatchUtils.simpleMatch(permission, x) }
+                .anyMatch { x: String -> PatternMatchUtils.simpleMatch(permissions, x) }
     }
 }

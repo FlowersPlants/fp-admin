@@ -19,19 +19,19 @@ import javax.sql.DataSource
 
 @Configuration
 @AutoConfigureBefore(WebSecurityConfig::class)
-@EnableConfigurationProperties(SsoProperties::class)
-class SsoConfig {
+@EnableConfigurationProperties(FpAdminProperties::class)
+class FpAdminConfig {
     @Autowired
     private lateinit var dataSource: DataSource
 
     @Autowired
-    private lateinit var properties: SsoProperties
+    private lateinit var properties: FpAdminProperties
 
     /**
      * 全局跨越处理过滤器
      */
     @Bean
-    @ConditionalOnProperty(prefix = "sso.cors", name = ["enable"], havingValue = "true")
+    @ConditionalOnProperty(prefix = "fp-admin.cors", name = ["enable"], havingValue = "true")
     fun corsFilter(): GlobalCorsWebFilter {
         return GlobalCorsWebFilter(this.properties.cors)
     }

@@ -9,8 +9,8 @@ import javax.validation.constraints.NotBlank
  * @author fpwag
  */
 class UserAddCmd : Command() {
-    @NotBlank(message = "角色不能为空")
-    var roleId: String? = null
+    @NotBlank(message = "所属部门不能为空")
+    var deptId: String? = null
 
     @NotBlank(message = "用户名不能为空")
     var username: String? = null

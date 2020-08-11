@@ -1,6 +1,6 @@
 package com.fpwag.admin.infrastructure.security.token.service
 
-import com.fpwag.admin.infrastructure.config.SsoProperties
+import com.fpwag.admin.infrastructure.config.FpAdminProperties
 import com.fpwag.admin.infrastructure.security.token.TokenInfo
 import com.fpwag.boot.data.redis.jackson.JacksonHolder
 import io.jsonwebtoken.Jwts
@@ -15,8 +15,8 @@ import java.util.function.Function
  * @author fpwag
  */
 @Component
-class JwtTokenService constructor(properties: SsoProperties) : AbstractTokenService(properties) {
-    private var jwt: SsoProperties.JwtProperties = properties.jwt
+class JwtTokenService constructor(properties: FpAdminProperties) : AbstractTokenService(properties) {
+    private var jwt: FpAdminProperties.JwtProperties = properties.jwt
     private val objectMapper = JacksonHolder.getInstance()
 
     override fun generateToken(token: TokenInfo, rememberMe: Boolean): String {
