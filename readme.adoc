@@ -1,0 +1,39 @@
+:icons: font
+
+= FPADMIN简介
+
+一个简单的基于DDD架构的后台管理项目，在原项目link:https://github.com/FlowersPlants/sso.git[sso]上进行的修改
+
+== 更新日志
+* link:doc/commitlist.adoc[代码提交日志]
+* link:doc/changelist.adoc[更新日志]
+
+== 技术栈
+* DDD架构设计
+* kotlin + maven
+* spring-boot v2.x
+* spring-security v5.x
+* Redis缓存
+* Vue element-ui
+
+== 规划功能
+* [x] 基于Spring Security的权限控制
+* [x] 前后端分离，前端基于Vue
+* [x] 权限细化到按钮级别
+* [x] 日志记录功能
+* [ ] 完成service层单元测试
+* [x] 所有标记 TODO 的部分
+* [x] 所有抛出的异常可以利用断言实现
+* [x] jackson的kotlin问题（不能正确序列化）；原因是缺少 `open` 关键字，不确定具体原因
+* [ ] 完善文档
+* [ ] 添加部门信息管理功能，完善授权系统，权限细化到数据级别
+
+== 问题与解决
+* link:doc/peas.adoc[问题与解决方法]
+
+== 截图
+link:doc/sample.adoc[页面截图]
+
+== License
+SSO is Open Source software released under the
+https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].

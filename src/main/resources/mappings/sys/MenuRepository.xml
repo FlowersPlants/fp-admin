@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpwag.admin.domain.repository.MenuRepository">
+<!--    <select id="selectByRoleIds" parameterType="java.util.List" resultType="Menu">-->
+<!--        select a.*-->
+<!--        from sys_menu a-->
+<!--        left join sys_role_menu rm on rm.menu_id = a.id-->
+<!--        left join sys_role r on r.id = rm.role_id-->
+<!--        where a.enabled = 1 and r.id in-->
+<!--        <foreach collection="list" index="index" item="e" open="(" separator="," close=")">-->
+<!--            #{e}-->
+<!--        </foreach>-->
+<!--    </select>-->
+
+    <select id="selectByUserId" parameterType="java.lang.String" resultType="Menu">
+        select a.*
+        from sys_menu a
+                 left join sys_role_menu rm on rm.menu_id = a.id
+                 left join sys_user u on u.role_id = rm.role_id
+        where a.enabled = 1
+          and u.id = #{userId}
+    </select>
+
+    <select id="selectChildren" resultType="Menu">
+        SELECT * FROM sys_menu WHERE FIND_IN_SET(id, FIND_CHILDREN(#{id}))
+    </select>
+</mapper>

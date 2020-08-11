@@ -1,0 +1,27 @@
+server:
+  port: 8899
+  undertow:
+    accesslog:
+      enabled: false # 是否打开 undertow 日志，默认为 false
+      dir: .logs # 设置访问日志所在目录
+    threads:
+      io: 2 # 指定工作者线程的 I/0 线程数，默认为 2 或者 CPU 的个数
+      worker: 16 # 指定工作者线程个数，默认为 I/O 线程个数的 8 倍
+    max-http-post-size: 0 # 设置 HTTP POST 内容的最大长度，默认不做限制
+
+spring:
+  application:
+    name: fp-admin
+  main:
+    banner-mode: off # 关闭banner打印
+  profiles:
+    active: ${SPRING_PROFILE_ACTIVE:dev}
+
+mybatis-plus:
+  mapper-locations: classpath:mappings/**/*.xml # xml文件扫描配置
+  configuration:
+    map-underscore-to-camel-case: true # 下划线转驼峰，默认为true
+  global-config:
+    banner: false
+  type-aliases-package: com.fpwag.admin.domain.entity # 别名扫描
+  type-aliases-super-type: com.fpwag.boot.core.cqrs.EntityObject # 别名扫描父类，配合type-aliases-package使用

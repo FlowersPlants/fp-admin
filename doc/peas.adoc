@@ -1,0 +1,32 @@
+== 遇到的问题与解决方法
+
+=== 1.docker的kotlin+mapstrut打包部署
+maven下的kotlin+mapstrut打包步骤：直接运行命令 `mvn clean kotlin:compile kotlin:kapt package dockerfile:build -Dmaven.test.skip=true`;
+简单来说就是需要先执行kotlin的compile命令进行项目构建，然后利用kapt插件对mapstrut进行处理，最后打包发布到docker中
+
+=== 2. 关于spring cache缓存缺少@class属性的问题
+在kotlin环境下，spring缓存注解作用于部分实体接口时，redis缓存的内容缺少@class属性，导致反序列化失败；
+[[app-listing]]
+[source,kotlin]
+.DictDto.kt
+----
+class DictDto {
+    var id: String? = null
+    // 其他属性
+}
+----
+.DictServiceImpl.kt
+----
+@org.springframework.cache.annotation.Cacheable(key="#p0")
+fun findById(id: String): DictDto {
+    // do something
+}
+----
+此时redis里面存储的内容无@class属性，导致第二次调用findById方法时反序列化错误问题
+....
+{
+    "id": "1"
+    // 其他属性
+}
+....
+解决方案是在 `DictDto.kt` 类上添加open关键字，暂不清楚原因！！

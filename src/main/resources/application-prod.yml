@@ -1,0 +1,53 @@
+# 正式环境配置，注意替换掉主机和端口，同时修改为自己的连接密码
+spring:
+  datasource:
+    username: fpwag
+    password: ~
+    url: jdbc:mysql://~/fp-admin?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    timeout: 1000
+    host: ~
+    password: ~
+    port: 6379
+    database: 1
+    lettuce:
+      pool:
+        max-active: 10 # 最大活跃连接数
+        max-idle: 10 # 最大空闲连接
+        min-idle: 2 # 最小空闲连接
+        max-wait: 6000 # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      shutdown-timeout: 100
+  mvc:
+    throw-exception-if-no-handler-found: true # 抛出404异常
+  resources:
+    add-mappings: false # 静态资源不可用，会影响swagger
+
+mybatis-plus:
+  check-config-location: false # 启动时是否检查mybatis xml文件存在，此环境不检查，默认不检查
+
+fpwag-boot:
+  logging:
+    enable: true
+    print-details: false
+  web:
+    result:
+      enable: true
+    exception:
+      enable: true
+      output-trace: false
+  swagger:
+    enable: false # 关闭swagger接口文档
+  redis:
+    enable: true # 开启spring cache缓存注解
+    # 自定义缓存过期等策略
+    cache-accept:
+      - key: sys_user
+        ttl: 259200000 # 3天
+    global-ttl: 86400000 # 全局过期时间设置 1天
+
+sso:
+  image-code:
+    enable: true
+  cors:
+    enable: true # 开启跨越处理
