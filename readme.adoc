@@ -35,5 +35,5 @@
 link:doc/sample.adoc[页面截图]
 
 == License
-SSO is Open Source software released under the
+FPADMIN is Open Source software released under the
 https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 license].
