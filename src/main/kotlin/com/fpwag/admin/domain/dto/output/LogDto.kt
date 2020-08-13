@@ -1,7 +1,7 @@
 package com.fpwag.admin.domain.dto.output
 
 import com.fpwag.admin.infrastructure.CommonConstant
-import com.fpwag.boot.data.mybatis.dto.BaseDTO
+import com.fpwag.admin.infrastructure.mybatis.support.dto.BaseDTO
 
 /**
  * 日志信息输出

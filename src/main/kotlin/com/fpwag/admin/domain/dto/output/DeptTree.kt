@@ -10,8 +10,7 @@ class DeptTree : TreeNode() {
     }
 
     var name: String? = null
-
+    var status: Boolean? = null
     var createTime: LocalDateTime? = null
-
     var createBy: String? = null
 }

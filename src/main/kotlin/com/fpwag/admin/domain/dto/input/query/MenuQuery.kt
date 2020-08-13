@@ -1,6 +1,6 @@
 package com.fpwag.admin.domain.dto.input.query
 
-import com.fpwag.boot.data.mybatis.dto.BaseQuery
+import com.fpwag.admin.infrastructure.mybatis.support.dto.BaseQuery
 
 class MenuQuery : BaseQuery() {
     var parentId: String? = null

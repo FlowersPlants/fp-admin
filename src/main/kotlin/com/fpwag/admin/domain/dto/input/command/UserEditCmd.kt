@@ -1,6 +1,5 @@
 package com.fpwag.admin.domain.dto.input.command
 
-import com.fpwag.boot.core.cqrs.Command
 import javax.validation.constraints.NotBlank
 
 /**
@@ -8,7 +7,7 @@ import javax.validation.constraints.NotBlank
  *
  * @author fpwag
  */
-class UserEditCmd : Command() {
+class UserEditCmd {
     @NotBlank(message = "字典id不能为空")
     var id: String? = null
 

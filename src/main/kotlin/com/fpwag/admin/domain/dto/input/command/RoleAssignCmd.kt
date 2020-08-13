@@ -1,6 +1,5 @@
 package com.fpwag.admin.domain.dto.input.command
 
-import com.fpwag.boot.core.cqrs.Command
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
@@ -9,7 +8,7 @@ import javax.validation.constraints.NotNull
  * @author FlowersPlants
  * @date 2018-12-18
  */
-class RoleAssignCmd : Command() {
+class RoleAssignCmd {
     /**
      * 角色ID
      */

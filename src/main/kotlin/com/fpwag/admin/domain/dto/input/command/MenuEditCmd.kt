@@ -1,6 +1,5 @@
 package com.fpwag.admin.domain.dto.input.command
 
-import com.fpwag.boot.core.cqrs.Command
 import javax.validation.constraints.NotBlank
 
 /**
@@ -9,7 +8,7 @@ import javax.validation.constraints.NotBlank
  * @see com.fpwag.admin.domain.entity.Menu
  * @author fpwag
  */
-class MenuEditCmd : Command() {
+class MenuEditCmd {
     @NotBlank(message = "字典id不能为空")
     var id: String? = null
 
@@ -26,8 +25,6 @@ class MenuEditCmd : Command() {
     var path: String? = null
 
     var component: String? = null
-
-    var componentName: String? = null
 
     var icon: String? = null
 

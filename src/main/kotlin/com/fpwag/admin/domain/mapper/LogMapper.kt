@@ -8,7 +8,6 @@ import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.ReportingPolicy
 
-
 /**
  * 日志的dto和实体对象转换工具
  *

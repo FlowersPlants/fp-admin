@@ -4,7 +4,6 @@ import com.fpwag.admin.domain.dto.input.command.DeptAddCmd
 import com.fpwag.admin.domain.dto.input.command.DeptEditCmd
 import com.fpwag.admin.domain.dto.input.query.DeptQuery
 import com.fpwag.admin.domain.dto.output.DeptDto
-import com.fpwag.admin.domain.entity.Dept
 import com.fpwag.admin.domain.service.DeptService
 import com.fpwag.boot.data.mybatis.PageResult
 import com.fpwag.boot.logging.annotation.SystemLog
@@ -29,7 +28,7 @@ class DeptController {
     @PreAuthorize("@pms.hasPermission('sys:dept:list', 'sys:user:list')")
     fun find(query: DeptQuery?): PageResult<DeptDto> {
         val records = this.service.findList(query)
-        return PageResult.of<Dept, DeptDto>(records.size, records)
+        return PageResult.of<DeptDto>(records.size, records)
     }
 
     @SystemLog(value = "新增部门", type = SystemLog.Type.INSERT)

@@ -1,6 +1,5 @@
 package com.fpwag.admin.domain.dto.input.command
 
-import com.fpwag.boot.core.cqrs.Command
 import javax.validation.constraints.NotBlank
 
 /**
@@ -9,7 +8,7 @@ import javax.validation.constraints.NotBlank
  * @see com.fpwag.admin.domain.entity.DictItem
  * @author fpwag
  */
-class DictItemAddCmd : Command() {
+class DictItemAddCmd {
     @NotBlank(message = "字典值不能为空")
     var value: String? = null
 

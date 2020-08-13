@@ -1,15 +1,15 @@
 package com.fpwag.admin.application.service
 
 import cn.hutool.core.util.RandomUtil
-import com.fpwag.admin.infrastructure.security.token.UserInfo
-import com.fpwag.admin.infrastructure.security.token.TokenInfo
 import com.fpwag.admin.domain.dto.input.UserCommand
+import com.fpwag.admin.domain.mapper.UserMapper
 import com.fpwag.admin.domain.service.MenuService
 import com.fpwag.admin.domain.service.RoleService
 import com.fpwag.admin.domain.service.UserService
-import com.fpwag.admin.infrastructure.CommonConstant
+import com.fpwag.admin.infrastructure.AuthInfo
 import com.fpwag.boot.core.constants.CommonConstants
 import com.fpwag.boot.core.exception.Assert
+import com.fpwag.boot.core.exception.CustomException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
@@ -36,32 +36,13 @@ class SystemService {
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
-    /**
-     * 根据账号获取用户信息
-     *
-     * @param account 用户账号
-     * @param protectedPwd 用户的密码是否受保护的，如果是则把密码替换成"N/A"
-     * @return 用户信息，包括角色和菜单权限
-     */
-    fun getUserInfo(account: String?, protectedPwd: Boolean = true): TokenInfo {
-        val user = this.userService.findByUsername(account)
-        Assert.isTrue(user != null, "获取用户{}信息失败", account)
-
-        val roles = this.roleService.findByUserId(user!!.id).mapNotNull { it.code }
-        val permissions = this.menuService.findByUserId(user.id).mapNotNull { it.permission }
-
+    fun getUserInfo(username: String?): AuthInfo {
+        val dto = this.userService.findByUsername(username) ?: throw CustomException("用户名或密码错误")
+        val roles = this.roleService.findByUserId(dto.id).mapNotNull { it.code }
+        val menus = if (dto.admin) this.menuService.findAll() else this.menuService.findByUserId(dto.id)
+        val permissions = menus.mapNotNull { it.permission }
         val authorities = mutableListOf(*roles.toTypedArray(), *permissions.toTypedArray())
-
-        val password = if (protectedPwd) CommonConstant.PROTECTED_PWD else user.password!!
-        val info = UserInfo(user.id, user.deptId!!, user.username!!, password).apply {
-            this.avatar = user.avatar
-            this.email = user.email
-            this.mobile = user.mobile
-            this.lockFlag = user.lockFlag
-            // TODO this.admin =
-            this.admin = true
-        }
-        return TokenInfo(info, authorities)
+        return AuthInfo(UserMapper.INSTANCE.map(dto)!!, authorities)
     }
 
     /**

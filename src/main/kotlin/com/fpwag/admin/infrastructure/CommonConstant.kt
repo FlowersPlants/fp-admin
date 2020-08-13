@@ -13,10 +13,8 @@ object CommonConstant {
     const val DEFAULT_TOKEN_EXPIRATION = 86400L
     // 设置了记住我的过期时间是 604800s，即7天
     const val DEFAULT_REMEMBER_ME_EXPIRATION = 604800L
-    // 密钥
-    const val DEFAULT_SECRET = "wang@+!secret"
     // 加密算法
-    const val DEFAULT_ALGORITHM = "hs256"
+    const val DEFAULT_ALGORITHM = "hs512"
     // 默认的主体信息
     const val DEFAULT_SUBJECT = "subject"
 

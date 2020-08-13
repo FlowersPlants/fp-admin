@@ -2,7 +2,7 @@ package com.fpwag.admin.domain.entity
 
 import com.baomidou.mybatisplus.annotation.TableName
 import com.fpwag.admin.infrastructure.CommonConstant
-import com.fpwag.boot.data.mybatis.model.WholeModel
+import com.fpwag.admin.infrastructure.mybatis.support.model.DataEntity
 
 /**
  * 菜单实体
@@ -10,12 +10,12 @@ import com.fpwag.boot.data.mybatis.model.WholeModel
  * @since v1
  */
 @TableName("sys_menu")
-class Menu() : WholeModel() {
+class Menu() : DataEntity() {
     companion object {
         private const val serialVersionUID = CommonConstant.SERIAL_VERSION
     }
 
-    constructor(id: String) : this() {
+    constructor(id: String?) : this() {
         this.id = id
     }
 
@@ -57,11 +57,6 @@ class Menu() : WholeModel() {
     var component: String? = null
 
     /**
-     * 前端页面组件名称
-     */
-    var componentName: String? = null
-
-    /**
      * 图标名称
      */
     var icon: String? = null
@@ -75,9 +70,4 @@ class Menu() : WholeModel() {
      * 是否缓存
      */
     var cache: Boolean? = null
-
-    /**
-     * 排序号
-     */
-    var sort: Int? = null
 }

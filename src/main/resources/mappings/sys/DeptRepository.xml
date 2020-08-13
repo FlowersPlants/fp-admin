@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fpwag.admin.domain.repository.DeptRepository">
+    <select id="selectByRoleId" parameterType="java.lang.String" resultType="Dept">
+        select a.*
+        from sys_dept a,sys_dept_role dr
+        where a.enabled = 1
+          and dr.dept_id = a.id
+          and dr.role_id = #{roleId}
+    </select>
 
+    <select id="selectChildren" resultType="Dept">
+        SELECT * FROM sys_menu WHERE FIND_IN_SET(id, FIND_DEPT_CHILDREN(#{id}))
+    </select>
 </mapper>

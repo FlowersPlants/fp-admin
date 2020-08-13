@@ -5,7 +5,7 @@ import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.dto.output.UserDto
-import com.fpwag.admin.domain.entity.User
+import com.fpwag.admin.infrastructure.mybatis.support.Service
 import com.fpwag.boot.data.mybatis.PageResult
 import org.springframework.data.domain.Pageable
 
@@ -14,18 +14,13 @@ import org.springframework.data.domain.Pageable
  * @author FlowersPlants
  * @since v1
  */
-interface UserService {
+interface UserService : Service<UserDto> {
     fun findPage(query: UserQuery?, pageable: Pageable): PageResult<UserDto>
 
     /**
      * 返回包含密码等敏感信息
      */
-    fun findByUsername(username: String?): User?
-
-    /**
-     * 返回包含密码等敏感信息
-     */
-    fun findById(id: String): User?
+    fun findByUsername(username: String?): UserDto?
 
     /**
      * 新增用户基本信息，后台接口
@@ -42,12 +37,7 @@ interface UserService {
     fun update(command: UserEditCmd)
 
     /**
-     * 修改用户信息，包括邮箱、头像、手机号、密码和状态等关键信息
+     * 修改用户信息，包括邮箱、头像、手机号、密码等关键信息
      */
     fun updateInfo(command: UserCommand)
-
-    /**
-     * 批量删除
-     */
-    fun delete(ids: MutableSet<String>)
 }

@@ -1,9 +1,8 @@
 package com.fpwag.admin.domain.dto.input.command
 
-import com.fpwag.boot.core.cqrs.Command
 import javax.validation.constraints.NotBlank
 
-class DeptAddCmd : Command() {
+class DeptAddCmd {
     @NotBlank(message = "上级部门不能为空")
     var parentId: String? = null
 

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse
 class GlobalCorsWebFilter(private var cors: FpAdminProperties.Cors) : OncePerRequestFilter(), Ordered {
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         val method = HttpMethod.resolve(request.method)
-        if (logger.isDebugEnabled) {
+        if (cors.enable && logger.isDebugEnabled) {
             logger.debug("doFilterInternal  url:${request.requestURI} ,method:$method")
         }
         response.setHeader("Access-control-Allow-Origin", cors.allowOrigin ?: request.getHeader("Origin"))
@@ -39,6 +39,6 @@ class GlobalCorsWebFilter(private var cors: FpAdminProperties.Cors) : OncePerReq
     }
 
     override fun getOrder(): Int {
-        return Ordered.HIGHEST_PRECEDENCE
+        return Ordered.HIGHEST_PRECEDENCE + 10
     }
 }

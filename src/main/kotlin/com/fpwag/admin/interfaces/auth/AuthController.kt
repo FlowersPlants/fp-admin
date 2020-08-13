@@ -1,7 +1,6 @@
 package com.fpwag.admin.interfaces.auth
 
 import com.fpwag.admin.application.service.AuthService
-import com.fpwag.admin.domain.dto.output.ImageCodeVO
 import com.fpwag.admin.domain.dto.input.LoginUser
 import com.fpwag.boot.logging.annotation.SystemLog
 import io.swagger.annotations.Api
@@ -27,7 +26,7 @@ class AuthController {
      */
     @ApiOperation("获取图形验证码")
     @GetMapping("code")
-    fun code(): ImageCodeVO {
+    fun code(): Any {
         return this.authService.getCode()
     }
 

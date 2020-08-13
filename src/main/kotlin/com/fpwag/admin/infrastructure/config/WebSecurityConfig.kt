@@ -1,8 +1,7 @@
 package com.fpwag.admin.infrastructure.config
 
-import com.fpwag.admin.infrastructure.security.filter.SecurityAuthorizationFilter
-import com.fpwag.admin.infrastructure.security.handler.SsoAccessDeniedHandler
-import com.fpwag.admin.infrastructure.security.handler.SsoAuthenticationEntryPoint
+import com.fpwag.admin.infrastructure.security.SecurityAuthorizationFilter
+import com.fpwag.admin.infrastructure.security.SsoAuthenticationEntryPoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -55,7 +54,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         val registry = http.exceptionHandling()
-                .accessDeniedHandler(SsoAccessDeniedHandler())
+//                .accessDeniedHandler(SsoAccessDeniedHandler()) // 已被全局异常处理
                 .authenticationEntryPoint(SsoAuthenticationEntryPoint())
                 .and().authorizeRequests()
 

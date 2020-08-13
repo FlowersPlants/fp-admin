@@ -25,13 +25,14 @@ class SecurityUserDetailsService : UserDetailsService {
      */
     override fun loadUserByUsername(username: String?): UserDetails {
         Assert.isTrue(!username.isNullOrBlank(), "用户名或密码错误")
-        val user = this.systemService.getUserInfo(account = username, protectedPwd = false)
-        return run {
-            val authorities = AuthorityUtils.createAuthorityList(*user.authorities.toTypedArray())
-            val info = user.userInfo
-            Assert.isTrue(info.lockFlag != true, "用户已禁用，请联系管理员")
 
-            SecurityUser(info.id, info.deptId, info.admin, info.username, info.password, authorities)
-        }
+        val info = this.systemService.getUserInfo(username)
+        val user = info.info
+
+        Assert.isTrue(user.status == true, "用户已禁用，请联系管理员")
+
+        val authorities = AuthorityUtils.createAuthorityList(*info.authorities.toTypedArray())
+
+        return SecurityUser(user.id!!, user.username!!, user.password!!, authorities)
     }
 }

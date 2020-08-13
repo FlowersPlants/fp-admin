@@ -1,6 +1,5 @@
 package com.fpwag.admin.domain.dto.input.command
 
-import com.fpwag.boot.core.cqrs.Command
 import javax.validation.constraints.NotBlank
 
 /**
@@ -9,7 +8,7 @@ import javax.validation.constraints.NotBlank
  * @see com.fpwag.admin.domain.entity.Role
  * @author fpwag
  */
-class RoleAddCmd : Command() {
+class RoleAddCmd {
     @NotBlank(message = "角色名称不能为空")
     var name: String? = null
 

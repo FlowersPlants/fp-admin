@@ -11,6 +11,6 @@
     </select>
 
     <select id="selectChildren" resultType="Menu">
-        SELECT * FROM sys_menu WHERE FIND_IN_SET(id, FIND_CHILDREN(#{id}))
+        SELECT * FROM sys_menu WHERE FIND_IN_SET(id, FIND_MENU_CHILDREN(#{id}))
     </select>
 </mapper>

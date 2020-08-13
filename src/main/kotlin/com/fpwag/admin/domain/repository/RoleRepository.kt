@@ -27,4 +27,9 @@ interface RoleRepository : BaseMapper<Role> {
      * 批量新增角色和菜单中间表记录
      */
     fun insertBatchMenuRecord(command: RoleAuthCmd): Int
+
+    /**
+     * 根据部门查询被关联的角色数量，判断部门是否与角色有关联
+     */
+    fun countByDeptIds(ids: MutableSet<String>)
 }

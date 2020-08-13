@@ -16,5 +16,4 @@ class LoginUser {
 
     var code: String? = null
     var uuid: String? = null
-    var rememberMe: Boolean = false
 }

@@ -5,6 +5,7 @@ import com.fpwag.admin.domain.dto.input.command.RoleAuthCmd
 import com.fpwag.admin.domain.dto.input.command.RoleEditCmd
 import com.fpwag.admin.domain.dto.input.query.RoleQuery
 import com.fpwag.admin.domain.dto.output.RoleDto
+import com.fpwag.admin.infrastructure.mybatis.support.Service
 import com.fpwag.boot.data.mybatis.PageResult
 import org.springframework.data.domain.Pageable
 
@@ -13,16 +14,11 @@ import org.springframework.data.domain.Pageable
  * @author FlowersPlants
  * @since v1
  */
-interface RoleService {
+interface RoleService : Service<RoleDto> {
     /**
      * 获取分页数据
      */
     fun findPage(query: RoleQuery?, pageable: Pageable): PageResult<RoleDto>
-
-    /**
-     * 根据id获取角色信息
-     */
-    fun findById(id: String): RoleDto?
 
     /**
      * 根据用户低获取角色列表
@@ -43,9 +39,4 @@ interface RoleService {
      * 角色授权菜单
      */
     fun authMenus(command: RoleAuthCmd?)
-
-    /**
-     * 批量删除角色
-     */
-    fun delete(ids: MutableSet<String>)
 }

@@ -1,13 +1,14 @@
 package com.fpwag.admin.interfaces.sys
 
 import com.fpwag.admin.application.service.SystemService
-import com.fpwag.admin.infrastructure.security.token.TokenInfo
+import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.UserCommand
 import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
 import com.fpwag.admin.domain.dto.input.command.UserUpdatePwdCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.service.UserService
+import com.fpwag.admin.infrastructure.AuthInfo
 import com.fpwag.admin.infrastructure.security.SecurityUtils
 import com.fpwag.boot.logging.annotation.SystemLog
 import io.swagger.annotations.Api
@@ -42,7 +43,7 @@ class UserController {
     @SystemLog(value = "获取当前用户信息", type = SystemLog.Type.QUERY)
     @ApiOperation("获取当前用户信息")
     @GetMapping("info")
-    fun getInfo(): TokenInfo {
+    fun getInfo(): AuthInfo {
         val username = SecurityUtils.getUsername()
         return this.systemService.getUserInfo(username)
     }
@@ -114,30 +115,29 @@ class UserController {
 
     @SystemLog(value = "修改状态", type = SystemLog.Type.UPDATE)
     @ApiOperation("修改状态")
-    @ApiImplicitParam(name = "lockFlag", value = "用户状态", required = true)
-    @PutMapping(value = ["{username}/us"])
-    fun updateStatus(@PathVariable("username") username: String, lockFlag: String): Any? {
-        return this.service.updateInfo(UserCommand(username, UserCommand.Type.FLAG, lockFlag))
+    @PutMapping(value = ["us"])
+    fun updateStatus(@RequestBody command: UpdateStatusCmd): Any? {
+        return null
     }
 
-    @PutMapping("{username}/up")
-    fun updatePwd(@PathVariable("username")username: String, @RequestBody command: UserUpdatePwdCmd): Any? {
+    @PutMapping("{id}/up")
+    fun updatePwd(@PathVariable("id") id: String, @RequestBody command: UserUpdatePwdCmd): Any? {
         return null
     }
 
     @SystemLog(value = "修改邮箱", type = SystemLog.Type.UPDATE)
     @ApiOperation("修改邮箱")
     @ApiImplicitParam(name = "email", value = "用户邮箱", required = true)
-    @PutMapping(value = ["{username}/ue"])
-    fun updateEmail(@PathVariable("username") username: String, email: String): Any? {
-        return this.service.updateInfo(UserCommand(username, UserCommand.Type.EMAIL, email))
+    @PutMapping(value = ["{id}/ue"])
+    fun updateEmail(@PathVariable("id") id: String, email: String): Any? {
+        return this.service.updateInfo(UserCommand(id, UserCommand.Type.EMAIL, email))
     }
 
     @SystemLog(value = "修改头像", type = SystemLog.Type.UPDATE)
     @ApiOperation("修改头像")
     @ApiImplicitParam(name = "avatar", value = "用户头像地址", required = true)
-    @PutMapping(value = ["{username}/ua"])
-    fun updateAvatar(@PathVariable("username") username: String, avatar: String): Any? {
-        return this.service.updateInfo(UserCommand(username, UserCommand.Type.AVATAR, avatar))
+    @PutMapping(value = ["{id}/ua"])
+    fun updateAvatar(@PathVariable("id") id: String, avatar: String): Any? {
+        return this.service.updateInfo(UserCommand(id, UserCommand.Type.AVATAR, avatar))
     }
 }

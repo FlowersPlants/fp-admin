@@ -18,7 +18,7 @@ class PermissionService {
             return false
         }
 
-        val user = SecurityUtils.getSecurityUser() ?: return false
+        val user = SecurityUtils.getAuthentication() ?: return false
         val authorities = user.authorities
         return authorities.stream()
                 .map { obj: GrantedAuthority -> obj.authority }

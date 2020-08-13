@@ -1,15 +1,14 @@
 package com.fpwag.admin.domain.dto.output
 
 import com.fpwag.admin.infrastructure.CommonConstant
-import com.fpwag.boot.data.mybatis.dto.BaseDTO
-import java.time.LocalDateTime
+import com.fpwag.admin.infrastructure.mybatis.support.dto.DataDTO
 
 /**
  * 字典详情
  *
  * @author fpwag
  */
-open class DictItemDto : BaseDTO() {
+open class DictItemDto : DataDTO() {
     companion object {
         private const val serialVersionUID = CommonConstant.SERIAL_VERSION
     }
@@ -21,7 +20,4 @@ open class DictItemDto : BaseDTO() {
 
     var label: String? = null
     var value: String? = null
-    var sort: Int? = null
-    var updateBy: String? = null
-    var updateTime: LocalDateTime? = null
 }

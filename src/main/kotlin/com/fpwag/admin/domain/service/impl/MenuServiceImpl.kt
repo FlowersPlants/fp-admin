@@ -1,6 +1,7 @@
 package com.fpwag.admin.domain.service.impl
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.command.MenuAddCmd
 import com.fpwag.admin.domain.dto.input.command.MenuEditCmd
 import com.fpwag.admin.domain.dto.input.query.MenuQuery
@@ -10,7 +11,6 @@ import com.fpwag.admin.domain.entity.Menu
 import com.fpwag.admin.domain.mapper.MenuMapper
 import com.fpwag.admin.domain.repository.MenuRepository
 import com.fpwag.admin.domain.service.MenuService
-import com.fpwag.admin.infrastructure.security.SecurityUtils
 import com.fpwag.boot.core.TreeNode
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.core.utils.MapperUtils
@@ -39,7 +39,10 @@ class MenuServiceImpl : MenuService {
     private lateinit var repository: MenuRepository
 
     @Cacheable(key = "'id_' + #p0")
-    override fun findById(id: String): MenuDto? {
+    override fun findById(id: String?): MenuDto? {
+        if (id.isNullOrBlank()) {
+            return null
+        }
         val entity = this.repository.selectById(id)
         return this.mapper.toDto(entity)
     }
@@ -62,11 +65,8 @@ class MenuServiceImpl : MenuService {
     }
 
     override fun findMenus(): MutableList<MenuDto> {
-        return if (SecurityUtils.isAdmin()) {
-            this.findAll()
-        } else {
-            this.findByUserId()
-        }
+        // TODO
+        return this.findAll()
     }
 
     @Cacheable
@@ -121,6 +121,15 @@ class MenuServiceImpl : MenuService {
     @Transactional
     override fun update(command: MenuEditCmd) {
         val entity = this.mapper.map(command)
+        val flag = this.repository.updateById(entity)
+        Assert.isTrue(flag > 0, "更新失败")
+    }
+
+    @CacheEvict(allEntries = true)
+    @Transactional
+    override fun updateStatus(command: UpdateStatusCmd) {
+        val entity = Menu(command.id)
+        entity.status = command.status
         val flag = this.repository.updateById(entity)
         Assert.isTrue(flag > 0, "更新失败")
     }

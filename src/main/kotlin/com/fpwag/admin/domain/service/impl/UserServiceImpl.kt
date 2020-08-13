@@ -2,6 +2,7 @@ package com.fpwag.admin.domain.service.impl
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.fpwag.admin.application.event.UserCreatedEvent
+import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.UserCommand
 import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
@@ -40,8 +41,15 @@ class UserServiceImpl : UserService {
     private lateinit var repository: UserRepository
 
     @Cacheable(key = "'username_' + #p0")
-    override fun findByUsername(username: String?): User? {
-        return this.findOne(username)
+    override fun findByUsername(username: String?): UserDto? {
+        val entity = this.findOne(username = username)
+        return this.mapper.toDto(entity)
+    }
+
+    @Cacheable(key = "'id_' + #p0")
+    override fun findById(id: String?): UserDto? {
+        val entity = this.findOne(id = id)
+        return this.mapper.toDto(entity)
     }
 
     @Cacheable
@@ -77,17 +85,12 @@ class UserServiceImpl : UserService {
         return PageResult.of(entityPage) { this.mapper.toDto(it) }
     }
 
-    @Cacheable(key = "'user_id_' + #p0")
-    override fun findById(id: String): User? {
-        return this.repository.selectById(id)
-    }
-
     @CacheEvict(allEntries = true)
     @Transactional
     override fun save(command: UserAddCmd) {
         val entity = this.mapper.map(command) ?: return
-        if (entity.lockFlag == null) {
-            entity.lockFlag = true // 默认正常
+        if (entity.status == null) {
+            entity.status = true // 默认正常
         }
         val flag = this.repository.insert(entity)
         Assert.isTrue(flag > 0, "更新失败")
@@ -107,15 +110,23 @@ class UserServiceImpl : UserService {
     @CacheEvict(allEntries = true)
     @Transactional
     override fun updateInfo(command: UserCommand) {
-        val user = User().apply { this.username = command.username }
+        val user = User(command.id)
         when (command.type) {
             UserCommand.Type.PWD -> user.password = command.value
             UserCommand.Type.EMAIL -> user.email = command.value
             UserCommand.Type.MOBILE -> user.mobile = command.value
             UserCommand.Type.AVATAR -> user.avatar = command.value
-            UserCommand.Type.FLAG -> user.lockFlag = java.lang.Boolean.valueOf(command.value)
         }
         this.repository.updateById(user)
+    }
+
+    @CacheEvict(allEntries = true)
+    @Transactional
+    override fun updateStatus(command: UpdateStatusCmd) {
+        val entity = User(command.id)
+        entity.status = command.status
+        val flag = this.repository.updateById(entity)
+        Assert.isTrue(flag > 0, "更新失败")
     }
 
     @CacheEvict(allEntries = true)
@@ -133,11 +144,14 @@ class UserServiceImpl : UserService {
      * @param mobile 手机号
      * @return 用户信息
      */
-    private fun findOne(username: String? = null, email: String? = null, mobile: String? = null): User? {
-        if (username.isNullOrBlank() && email.isNullOrBlank() && mobile.isNullOrBlank()) {
+    private fun findOne(id: String? = null, username: String? = null, email: String? = null, mobile: String? = null): User? {
+        if (id.isNullOrBlank() && username.isNullOrBlank() && email.isNullOrBlank() && mobile.isNullOrBlank()) {
             return null
         }
         return this.repository.selectOne(QueryWrapper<User>().apply {
+            if (!id.isNullOrBlank()) {
+                this.eq("id", id)
+            }
             if (!username.isNullOrBlank()) {
                 this.eq("username", username)
             }

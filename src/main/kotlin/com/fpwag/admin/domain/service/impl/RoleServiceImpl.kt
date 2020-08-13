@@ -1,6 +1,7 @@
 package com.fpwag.admin.domain.service.impl
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.command.RoleAddCmd
 import com.fpwag.admin.domain.dto.input.command.RoleAuthCmd
 import com.fpwag.admin.domain.dto.input.command.RoleEditCmd
@@ -65,7 +66,10 @@ class RoleServiceImpl : RoleService {
     }
 
     @Cacheable(key = "#p0")
-    override fun findById(id: String): RoleDto? {
+    override fun findById(id: String?): RoleDto? {
+        if (id.isNullOrBlank()) {
+            return null
+        }
         val entity = this.repository.selectById(id)
         return this.mapper.toDto(entity)
     }
@@ -89,6 +93,15 @@ class RoleServiceImpl : RoleService {
     @Transactional
     override fun update(command: RoleEditCmd) {
         val entity = this.mapper.map(command)
+        val flag = this.repository.updateById(entity)
+        Assert.isTrue(flag > 0, "更新失败")
+    }
+
+    @CacheEvict(allEntries = true)
+    @Transactional
+    override fun updateStatus(command: UpdateStatusCmd) {
+        val entity = Role(command.id)
+        entity.status = command.status
         val flag = this.repository.updateById(entity)
         Assert.isTrue(flag > 0, "更新失败")
     }

@@ -5,6 +5,7 @@ import com.fpwag.admin.domain.dto.input.command.DictItemEditCmd
 import com.fpwag.admin.domain.dto.input.query.DictItemQuery
 import com.fpwag.admin.domain.dto.output.DictItemDto
 import com.fpwag.admin.domain.service.DictItemService
+import com.fpwag.boot.data.mybatis.PageResult
 import com.fpwag.boot.logging.annotation.SystemLog
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -25,8 +26,8 @@ class DictItemController {
     @ApiOperation("根据字典id或code获取字典详情")
     @GetMapping
     fun findByDict(query: DictItemQuery): Any {
-        val list = this.service.findByDict(query)
-        return mutableMapOf("records" to list, "total" to list.size)
+        val list = this.service.findList(query)
+        return PageResult.of<DictItemDto>(list.size, list)
     }
 
     @SystemLog(value = "根据id获取字典", type = SystemLog.Type.QUERY)

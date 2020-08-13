@@ -1,15 +1,14 @@
 package com.fpwag.admin.domain.dto.output
 
 import com.fpwag.admin.infrastructure.CommonConstant
-import com.fpwag.boot.data.mybatis.dto.BaseDTO
-import java.time.LocalDateTime
+import com.fpwag.admin.infrastructure.mybatis.support.dto.DataDTO
 
 /**
  * 菜单数据传输对象
  *
  * @author fpwag
  */
-open class MenuDto : BaseDTO() {
+open class MenuDto : DataDTO() {
     companion object {
         private const val serialVersionUID = CommonConstant.SERIAL_VERSION
     }
@@ -21,13 +20,9 @@ open class MenuDto : BaseDTO() {
     var name: String? = null
     var path: String? = null
     var component: String? = null
-    var componentName: String? = null
-    var sort: Int? = null
     var icon: String? = null
     var hidden: Boolean? = null
     var cache: Boolean? = null
-    var updateBy: String? = null
-    var updateTime: LocalDateTime? = null
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

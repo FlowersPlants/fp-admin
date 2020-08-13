@@ -2,7 +2,7 @@ package com.fpwag.admin.domain.entity
 
 import com.baomidou.mybatisplus.annotation.TableName
 import com.fpwag.admin.infrastructure.CommonConstant
-import com.fpwag.boot.data.mybatis.model.WholeModel
+import com.fpwag.admin.infrastructure.mybatis.support.model.DataEntity
 
 /**
  * 用户实体
@@ -10,9 +10,13 @@ import com.fpwag.boot.data.mybatis.model.WholeModel
  * @since v1
  */
 @TableName("sys_user")
-open class User : WholeModel() {
+class User() : DataEntity() {
     companion object {
         private const val serialVersionUID = CommonConstant.SERIAL_VERSION
+    }
+
+    constructor(id: String?) : this() {
+        this.id = id
     }
 
     var deptId: String? = null
@@ -31,8 +35,6 @@ open class User : WholeModel() {
 
     var avatar: String? = null
 
-    var sort: Int? = null
-
     var email: String? = null
 
     var mobile: String? = null
@@ -40,10 +42,10 @@ open class User : WholeModel() {
     /**
      * 性别（0-保密，1-男，2-女）
      */
-    var gender: String? = null
+    var gender: Int? = null
 
     /**
-     * 用户状态(1-正常，0-禁用)
+     * 是否超级管理员
      */
-    var lockFlag: Boolean? = null
+    var admin: Boolean? = null
 }

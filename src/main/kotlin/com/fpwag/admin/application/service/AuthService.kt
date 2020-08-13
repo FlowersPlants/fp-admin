@@ -2,17 +2,20 @@ package com.fpwag.admin.application.service
 
 import cn.hutool.captcha.LineCaptcha
 import cn.hutool.captcha.generator.MathGenerator
-import com.fpwag.admin.domain.dto.output.ImageCodeVO
 import com.fpwag.admin.domain.dto.input.LoginUser
 import com.fpwag.admin.infrastructure.config.FpAdminProperties
-import com.fpwag.admin.infrastructure.security.token.service.TokenService
+import com.fpwag.admin.infrastructure.security.TokenProvider
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.core.utils.IdUtils
 import com.fpwag.boot.data.redis.RedisOperator
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
+
 
 /**
  * 授权相关业务处理
@@ -20,27 +23,27 @@ import org.springframework.stereotype.Service
  * @author fpwag
  */
 @Service
-class AuthService {
+class AuthService(private var properties: FpAdminProperties) {
     companion object {
         private val LOGGER: Logger = LoggerFactory.getLogger(AuthService::class.java)
     }
 
     @Autowired
-    private lateinit var properties: FpAdminProperties
-    @Autowired
-    private lateinit var tokenService: TokenService
-    @Autowired
-    private lateinit var systemService: SystemService
-    @Autowired
     private lateinit var redisOperation: RedisOperator
+
+    @Autowired
+    private lateinit var tokenProvider: TokenProvider
+
+    @Autowired
+    private lateinit var authenticationManagerBuilder: AuthenticationManagerBuilder
 
     private lateinit var captcha: LineCaptcha
 
     /**
      * hutool 图片验证码
      */
-    fun getCode(): ImageCodeVO {
-        captcha = LineCaptcha(111, 36, 5, 50)
+    fun getCode(): Any {
+        captcha = LineCaptcha(111, 36, 5, 30)
         captcha.generator = MathGenerator(1)
         val code = captcha.code // 此code并不是计算后的结果，而是一个算术表达式
         val uuid: String = this.properties.imageCode.codeKey + IdUtils.snowflakeId()
@@ -50,7 +53,10 @@ class AuthService {
         }
 
         this.redisOperation.set(uuid, code, this.properties.imageCode.expiration)
-        return ImageCodeVO(img = "data:image/png;base64,${captcha.imageBase64}", uuid = uuid)
+        return mutableMapOf(
+                "img" to "data:image/png;base64,${captcha.imageBase64}",
+                "uuid" to uuid
+        )
     }
 
     /**
@@ -68,8 +74,10 @@ class AuthService {
             Assert.isTrue(!loginUser.code.isNullOrBlank() && captcha.generator.verify(code, loginUser.code), "验证码错误")
         }
 
-        val user = this.systemService.getUserInfo(account = loginUser.username, protectedPwd = true)
-        val token = this.tokenService.generateToken(user, loginUser.rememberMe)
+        val authenticationToken = UsernamePasswordAuthenticationToken(loginUser.username, loginUser.password)
+        val authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken)
+        SecurityContextHolder.getContext().authentication = authentication
+        val token = this.tokenProvider.createToken(authentication)
 
         if (LOGGER.isInfoEnabled) {
             LOGGER.info("用户${loginUser.username}登录成功！token: $token")

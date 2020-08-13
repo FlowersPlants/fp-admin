@@ -5,7 +5,7 @@ import com.fpwag.admin.domain.dto.input.command.MenuEditCmd
 import com.fpwag.admin.domain.dto.input.query.MenuQuery
 import com.fpwag.admin.domain.dto.output.MenuDto
 import com.fpwag.admin.domain.dto.output.MenuTree
-import com.fpwag.admin.infrastructure.security.SecurityUtils
+import com.fpwag.admin.infrastructure.mybatis.support.Service
 import com.fpwag.boot.core.TreeNode
 import com.fpwag.boot.core.constants.CommonConstants
 
@@ -14,11 +14,8 @@ import com.fpwag.boot.core.constants.CommonConstants
  * @author FlowersPlants
  * @since v1
  */
-interface MenuService {
-    /**
-     * 根据id获取菜单西悉尼
-     */
-    fun findById(id: String): MenuDto?
+interface MenuService : Service<MenuDto> {
+    fun findList(query: MenuQuery?): MutableList<MenuDto>
 
     /**
      * 根据父节点获取所有子节点列表
@@ -35,20 +32,12 @@ interface MenuService {
      * @param userId 用户id
      * @return 去重后的菜单列表
      */
-    fun findByUserId(userId: String? = SecurityUtils.getUserId()): MutableList<MenuDto>
+    fun findByUserId(userId: String?): MutableList<MenuDto>
 
     /**
      * 获取当前用户菜单列表
      */
     fun findMenus(): MutableList<MenuDto>
-
-    /**
-     * 根据请求参数获取菜单列表
-     *
-     * @param query 请求参数，一般包括父节点id、菜单名称等
-     * @return 菜单列表
-     */
-    fun findList(query: MenuQuery?): MutableList<MenuDto>
 
     /**
      * 获取所有菜单列表
@@ -77,9 +66,4 @@ interface MenuService {
      * 编辑角色信息
      */
     fun update(command: MenuEditCmd)
-
-    /**
-     * 批量删除菜单
-     */
-    fun delete(ids: MutableSet<String>)
 }

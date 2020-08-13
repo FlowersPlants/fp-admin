@@ -4,19 +4,19 @@ import com.baomidou.mybatisplus.annotation.IdType
 import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
 import com.fpwag.admin.infrastructure.CommonConstant
-import com.fpwag.boot.data.mybatis.model.BaseModel
+import com.fpwag.admin.infrastructure.mybatis.support.model.BaseEntity
 
 /**
  * 系统日志实体
  */
 @TableName("sys_log")
-class Log : BaseModel() {
+class Log : BaseEntity() {
     companion object {
         private const val serialVersionUID = CommonConstant.SERIAL_VERSION
     }
 
     @TableId(value = "id", type = IdType.INPUT)
-    var id: String? = null                  // 唯一请求号
+    override var id: String? = null                  // 唯一请求号
 
     var title: String? = null               // 日志标题
     var requestUri: String? = null          // 请求URI

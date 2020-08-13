@@ -1,4 +1,4 @@
-package com.fpwag.admin.infrastructure.security.handler
+package com.fpwag.admin.infrastructure.security
 
 import cn.hutool.json.JSONUtil
 import com.fpwag.boot.core.R
