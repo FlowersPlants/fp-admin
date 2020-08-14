@@ -6,18 +6,19 @@ import org.springframework.stereotype.Repository
 
 /**
  * 菜单管理数据库接口
+ *
  * @author FlowersPlants
  * @since v1
  */
 @Repository
 interface MenuRepository : BaseMapper<Menu> {
     /**
-     * 根据用户id查询其所有菜单列表
+     * 根据用户名查询其所有菜单列表
      *
-     * @param userId 用户id
-     * @return 菜单列表，可能有重复，需要在service层去重
+     * @param username 用户名
+     * @return 去重的菜单列表
      */
-    fun selectByUserId(userId: String): MutableList<Menu>
+    fun selectByUsername(username: String): MutableSet<Menu>
 
     /**
      * 根据菜单id和自定义树结构查询函数来查找所有子节点，包括本身

@@ -44,9 +44,7 @@ class DictItemServiceImpl : DictItemService {
 
     @Cacheable
     override fun findById(id: String?): DictItemDto? {
-        if (id.isNullOrBlank()) {
-            return null
-        }
+        if (id.isNullOrBlank()) return null
         val entity = this.repository.selectById(id)
         return this.mapper.toDto(entity)
     }

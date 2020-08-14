@@ -11,40 +11,35 @@ import com.fpwag.boot.core.constants.CommonConstants
 
 /**
  * 菜单业务处理
+ *
  * @author FlowersPlants
  * @since v1
  */
-interface MenuService : Service<MenuDto> {
+interface MenuService : Service<MenuQuery, MenuDto> {
+    /**
+     * 查找菜单列表
+     *
+     * @param query 菜单查询参数
+     * @return MutableList<MenuDto> 菜单列表
+     */
     fun findList(query: MenuQuery?): MutableList<MenuDto>
 
     /**
-     * 根据父节点获取所有子节点列表
+     * 返回子节点列表(直接子节点，不包括所有后代)
      *
-     * @param parentId 父节点id
-     * @param allChild 是否搜索所有子节点（包括间接子节点）
+     * @param id 父节点id
      * @return 菜单列表
      */
-    fun findByParentId(parentId: String = CommonConstants.ROOT_PARENT_ID, allChild: Boolean = false): MutableList<MenuDto>
+    fun findChildren(id: String): MutableList<MenuDto>
 
     /**
-     * 根据用户id获取其菜单列表
+     * 根据用户名获取其菜单列表<br>
+     * 如果用户是超级管理员则直接获取所有菜单
      *
-     * @param userId 用户id
+     * @param username 用户名
      * @return 去重后的菜单列表
      */
-    fun findByUserId(userId: String?): MutableList<MenuDto>
-
-    /**
-     * 获取当前用户菜单列表
-     */
-    fun findMenus(): MutableList<MenuDto>
-
-    /**
-     * 获取所有菜单列表
-     *
-     * @return 菜单列表
-     */
-    fun findAll(): MutableList<MenuDto>
+    fun findByUsername(username: String?, admin: Boolean = false): MutableList<MenuDto>
 
     /**
      * 构建树结构菜单列表
@@ -58,12 +53,16 @@ interface MenuService : Service<MenuDto> {
                   parentId: String = CommonConstants.ROOT_PARENT_ID): MutableList<MenuTree>
 
     /**
-     * 保存角色信息
+     * 保存菜单信息
+     *
+     * @param command 菜单信息
      */
     fun save(command: MenuAddCmd)
 
     /**
-     * 编辑角色信息
+     * 编辑菜单信息
+     *
+     * @param command 菜单信息
      */
     fun update(command: MenuEditCmd)
 }

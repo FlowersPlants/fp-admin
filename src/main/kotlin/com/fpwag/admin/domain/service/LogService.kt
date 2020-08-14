@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable
 
 /**
  * 日志记录相关业务接口
+ *
  * @author FlowersPlants
  */
 interface LogService {

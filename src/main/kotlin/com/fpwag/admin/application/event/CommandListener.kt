@@ -36,4 +36,9 @@ class CommandListener {
             logger.info("用户[${entity.username}]初始密码设置成功！")
         }
     }
+
+    @EventListener(value = [UpdatePwdEvent::class])
+    fun handle(event: UpdatePwdEvent) {
+        // TODO
+    }
 }

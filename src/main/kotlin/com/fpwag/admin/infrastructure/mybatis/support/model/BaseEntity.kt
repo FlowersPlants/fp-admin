@@ -6,7 +6,7 @@ import java.io.Serializable
 import java.time.LocalDateTime
 
 /**
- * 基于mybatis-plus定义的实体基类，包含一些必要的字段信息
+ * 基于mybatis-plus定义的实体基类，包含一些必要的字段信息，并提供仅包含id的hash、equals实现
  *
  * @author fpwag
  */

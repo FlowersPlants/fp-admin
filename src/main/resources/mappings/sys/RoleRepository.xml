@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fpwag.admin.domain.repository.RoleRepository">
-    <select id="selectByUserId" resultType="Role">
+    <select id="selectByUsername" resultType="Role">
         select a.*
-        from sys_role a left join sys_role_user ru on ru.role_id = a.id
-        where a.enabled = 1 and ru.user_id = #{userId}
+        from sys_role a
+        left join sys_role_user ru on ru.role_id = a.id
+        left join sys_user u on u.id = ru.user_id
+        where a.enabled = 1 and u.username = #{username}
     </select>
 
-    <select id="countByDeptIds">
-        select count(1) from sys_role a, sys_dept_role dr where a.id = dr.role_id and dr.dept_id in
-        <foreach collection="deptIds" item="e" separator=",">
-            #{e}
-        </foreach>
-    </select>
-
-    <insert id="insertBatchMenuRecord" parameterType="com.fpwag.admin.domain.dto.input.command.RoleAuthCmd">
+    <insert id="batchRoleMenus" parameterType="com.fpwag.admin.domain.dto.input.command.RoleAuthCmd">
         insert into sys_role_menu(role_id, menu_id) values
         <foreach collection="menuIds" item="e" separator=",">
             (#{id}, #{e})
         </foreach>
     </insert>
 
-    <delete id="deleteRoleMenuByRoleId" parameterType="com.fpwag.admin.domain.dto.input.command.RoleAuthCmd">
-        delete
-        from sys_role_menu
-        where role_id = #{id}
+    <insert id="batchRoleUsers" parameterType="com.fpwag.admin.domain.dto.input.command.RoleAssignCmd">
+        insert into sys_role_user(role_id, user_id) values
+        <foreach collection="userIds" item="e" separator=",">
+            (#{id}, #{e})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleMenus">
+        delete from sys_role_menu where role_id = #{id}
+    </delete>
+
+    <delete id="deleteRoleUsers">
+        delete from sys_role_user where role_id = #{id}
     </delete>
 </mapper>

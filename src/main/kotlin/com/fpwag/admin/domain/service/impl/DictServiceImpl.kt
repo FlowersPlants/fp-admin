@@ -33,7 +33,7 @@ class DictServiceImpl : DictService {
     private lateinit var repository: DictRepository
 
     @Cacheable
-    override fun findPage(query: DictQuery?, pageable: Pageable): PageResult<DictDto> {
+    override fun findPage(query: DictQuery?, pageable: Pageable?): PageResult<DictDto> {
         val page = MybatisPageMapper.pageableToPage<Dict>(pageable)
         val entityPage = this.repository.selectPage(page, QueryWrapper<Dict>().apply {
             query?.let {
@@ -64,9 +64,7 @@ class DictServiceImpl : DictService {
 
     @Cacheable(key = "'dict_id_' + #p0")
     override fun findById(id: String?): DictDto? {
-        if (id.isNullOrBlank()) {
-            return null
-        }
+        if (id.isNullOrBlank()) return null
         val entity = this.repository.selectById(id)
         return this.mapper.toDto(entity)
     }

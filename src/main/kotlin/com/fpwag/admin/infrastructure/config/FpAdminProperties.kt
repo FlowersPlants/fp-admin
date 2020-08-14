@@ -103,14 +103,6 @@ class FpAdminProperties {
          */
         var tokenPrefix: String = CommonConstant.DEFAULT_TOKEN_PREFIX
         /**
-         * token expiration, default 1800L(30min), unit: second
-         */
-        var expiration: Long = CommonConstant.DEFAULT_TOKEN_EXPIRATION
-        /**
-         * remember me token expiration, default 604800L(one week), unit: second
-         */
-        var rememberExpiration: Long = CommonConstant.DEFAULT_REMEMBER_ME_EXPIRATION
-        /**
          * token secret key, cannot be null.
          */
         var secretKey: String? = null
@@ -118,9 +110,5 @@ class FpAdminProperties {
          * token encode algorithm, default hs256.
          */
         var algorithm: String = CommonConstant.DEFAULT_ALGORITHM
-        /**
-         * jwt subject name.
-         */
-        var subject: String = CommonConstant.DEFAULT_SUBJECT
     }
 }

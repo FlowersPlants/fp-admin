@@ -4,7 +4,6 @@ import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
 import com.fpwag.admin.domain.dto.output.UserDto
 import com.fpwag.admin.domain.entity.User
-import com.fpwag.admin.infrastructure.UserInfo
 import com.fpwag.boot.core.BaseMapper
 import org.mapstruct.Mapper
 import org.mapstruct.ReportingPolicy
@@ -36,12 +35,4 @@ interface UserMapper : BaseMapper<User, UserDto> {
      * @return 实体对象
      */
     fun map(command: UserEditCmd?): User?
-
-    /**
-     * 实体映射
-     *
-     * @param dto /
-     * @return 用户信息
-     */
-    fun map(dto: UserDto?): UserInfo?
 }

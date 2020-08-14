@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fpwag.admin.domain.repository.MenuRepository">
-    <select id="selectByUserId" parameterType="java.lang.String" resultType="Menu">
+    <select id="selectByUsername" parameterType="java.lang.String" resultType="Menu">
         select a.*
         from sys_menu a
                  left join sys_role_menu rm on rm.menu_id = a.id
                  left join sys_role_user ru on ru.role_id = rm.role_id
+                 left join sys_user u on u.id = ru.user_id
         where a.enabled = 1
-          and ru.user_id = #{userId}
+          and u.username = #{username}
     </select>
 
     <select id="selectChildren" resultType="Menu">

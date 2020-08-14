@@ -1,6 +1,7 @@
 package com.fpwag.admin.interfaces.sys
 
 import com.fpwag.admin.domain.dto.input.command.RoleAddCmd
+import com.fpwag.admin.domain.dto.input.command.RoleAssignCmd
 import com.fpwag.admin.domain.dto.input.command.RoleAuthCmd
 import com.fpwag.admin.domain.dto.input.command.RoleEditCmd
 import com.fpwag.admin.domain.dto.input.query.RoleQuery
@@ -56,6 +57,14 @@ class RoleController {
     @PreAuthorize("@pms.hasPermission('sys:role:auth')")
     fun roleAuth(@Validated @RequestBody command: RoleAuthCmd): Any? {
         return this.service.authMenus(command)
+    }
+
+    @SystemLog(value = "用户分配", type = SystemLog.Type.UPDATE)
+    @ApiOperation("用户分配")
+    @PostMapping("assign")
+    @PreAuthorize("@pms.hasPermission('sys:role:assign')")
+    fun assign(@Validated @RequestBody command: RoleAssignCmd): Any? {
+        return this.service.assignUsers(command)
     }
 
     /**

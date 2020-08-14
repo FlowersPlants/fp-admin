@@ -2,14 +2,11 @@ package com.fpwag.admin.application.service
 
 import cn.hutool.core.util.RandomUtil
 import com.fpwag.admin.domain.dto.input.UserCommand
-import com.fpwag.admin.domain.mapper.UserMapper
 import com.fpwag.admin.domain.service.MenuService
 import com.fpwag.admin.domain.service.RoleService
 import com.fpwag.admin.domain.service.UserService
-import com.fpwag.admin.infrastructure.AuthInfo
 import com.fpwag.boot.core.constants.CommonConstants
 import com.fpwag.boot.core.exception.Assert
-import com.fpwag.boot.core.exception.CustomException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
@@ -36,17 +33,22 @@ class SystemService {
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
-    fun getUserInfo(username: String?): AuthInfo {
-        val dto = this.userService.findByUsername(username) ?: throw CustomException("用户名或密码错误")
-        val roles = this.roleService.findByUserId(dto.id).mapNotNull { it.code }
-        val menus = if (dto.admin) this.menuService.findAll() else this.menuService.findByUserId(dto.id)
-        val permissions = menus.mapNotNull { it.permission }
-        val authorities = mutableListOf(*roles.toTypedArray(), *permissions.toTypedArray())
-        return AuthInfo(UserMapper.INSTANCE.map(dto)!!, authorities)
+    /**
+     * 获取某个用户的所有权限和角色集合
+     *
+     * @param username 用户名
+     * @param admin 是否超级管理员，默认false
+     * @return 权限列表
+     */
+    fun getAuthorities(username: String?, admin: Boolean = false): Collection<String> {
+        val roles = this.roleService.findByUsername(username).mapNotNull { it.code }
+        val permissions = this.menuService.findByUsername(username, admin).mapNotNull { it.permission }
+        return mutableListOf(*roles.toTypedArray(), *permissions.toTypedArray())
     }
 
     /**
      * 修改密码
+     * TODO 移到事件监听处理器中
      *
      * @param userId 用户账号
      * @param oldEncryptPwd 旧密码（md5加密）
@@ -65,19 +67,21 @@ class SystemService {
      * <p>
      * 重置密码，直接重置为系统默认的密码<br>
      * 也可以生成一个随机密码
+     * TODO 移到事件监听处理器中
      *
      * @param userId 用户id
      */
     fun resetPwd(userId: String, random: Boolean = false): String {
+        var defaultPwd = "fpwag1234!"
         var encryptPassword = CommonConstants.DEFAULT_USER_PWD
         if (random) {
-            val password = RandomUtil.randomString(12)
-            encryptPassword = DigestUtils.md5DigestAsHex(password.toByteArray())
+            defaultPwd = RandomUtil.randomString(12)
+            encryptPassword = DigestUtils.md5DigestAsHex(defaultPwd.toByteArray())
         }
 
         val encodedPassword = this.passwordEncoder.encode(encryptPassword)
         this.userService.updateInfo(UserCommand(userId, UserCommand.Type.PWD, encodedPassword))
 
-        return encryptPassword
+        return defaultPwd
     }
 }

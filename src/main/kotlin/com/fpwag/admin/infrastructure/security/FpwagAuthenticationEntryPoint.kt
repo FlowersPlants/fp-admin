@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse
  * @author fpwag
  */
 @Component
-class SsoAuthenticationEntryPoint : AuthenticationEntryPoint {
+class FpwagAuthenticationEntryPoint : AuthenticationEntryPoint {
     private val logger = LoggerFactory.getLogger(this.javaClass)
     override fun commence(p0: HttpServletRequest, p1: HttpServletResponse, p2: AuthenticationException?) {
         this.logger.error("用户未认证[${p2?.message}]，不能访问服务器资源[${p0.requestURI} ${p0.method}]")

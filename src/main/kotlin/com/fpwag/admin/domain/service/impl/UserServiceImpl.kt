@@ -53,7 +53,7 @@ class UserServiceImpl : UserService {
     }
 
     @Cacheable
-    override fun findPage(query: UserQuery?, pageable: Pageable): PageResult<UserDto> {
+    override fun findPage(query: UserQuery?, pageable: Pageable?): PageResult<UserDto> {
         val page = MybatisPageMapper.pageableToPage<User>(pageable)
         val entityPage = this.repository.selectPage(page, QueryWrapper<User>().apply {
             query?.let {

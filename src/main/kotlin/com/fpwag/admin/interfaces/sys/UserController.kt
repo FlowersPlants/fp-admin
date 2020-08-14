@@ -8,7 +8,6 @@ import com.fpwag.admin.domain.dto.input.command.UserEditCmd
 import com.fpwag.admin.domain.dto.input.command.UserUpdatePwdCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.service.UserService
-import com.fpwag.admin.infrastructure.AuthInfo
 import com.fpwag.admin.infrastructure.security.SecurityUtils
 import com.fpwag.boot.logging.annotation.SystemLog
 import io.swagger.annotations.Api
@@ -43,9 +42,13 @@ class UserController {
     @SystemLog(value = "获取当前用户信息", type = SystemLog.Type.QUERY)
     @ApiOperation("获取当前用户信息")
     @GetMapping("info")
-    fun getInfo(): AuthInfo {
+    fun getInfo(): Any {
         val username = SecurityUtils.getUsername()
-        return this.systemService.getUserInfo(username)
+        val info = this.service.findByUsername(username)
+        return mutableMapOf(
+                "info" to info,
+                "authorities" to this.systemService.getAuthorities(username, info?.admin ?: false)
+        )
     }
 
     /**

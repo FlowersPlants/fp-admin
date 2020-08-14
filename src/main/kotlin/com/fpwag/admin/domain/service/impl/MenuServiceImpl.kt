@@ -23,11 +23,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
-/**
- * 菜单service实现类
- * @author FlowersPlants
- * @since v1
- */
 @Service
 @CacheConfig(cacheNames = ["sys_menu"])
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = [Exception::class])
@@ -40,33 +35,26 @@ class MenuServiceImpl : MenuService {
 
     @Cacheable(key = "'id_' + #p0")
     override fun findById(id: String?): MenuDto? {
-        if (id.isNullOrBlank()) {
-            return null
-        }
+        if (id.isNullOrBlank()) return null
         val entity = this.repository.selectById(id)
         return this.mapper.toDto(entity)
     }
 
     @Cacheable
-    override fun findByParentId(parentId: String, allChild: Boolean): MutableList<MenuDto> {
-        return if (allChild) {
-            val list = this.repository.selectChildren(parentId)
-            this.mapper.toDto(list)
-        } else {
-            this.findList(parentId)
-        }
-    }
-
-    @Cacheable(key = "'user_id_' + #p0")
-    override fun findByUserId(userId: String?): MutableList<MenuDto> {
-        if (userId.isNullOrBlank()) return mutableListOf()
-        val list = this.repository.selectByUserId(userId)
+    override fun findChildren(id: String): MutableList<MenuDto> {
+        val list = this.repository.selectList(QueryWrapper<Menu>().apply {
+            this.eq("parent_id", id)
+            this.orderByAsc("sort")
+        })
         return this.mapper.toDto(list)
     }
 
-    override fun findMenus(): MutableList<MenuDto> {
-        // TODO
-        return this.findAll()
+    @Cacheable(key = "'username_' + #p0")
+    override fun findByUsername(username: String?, admin: Boolean): MutableList<MenuDto> {
+        if (username.isNullOrBlank()) return mutableListOf()
+        if (admin) return this.findList(null)
+        val list = this.repository.selectByUsername(username)
+        return this.mapper.toDto(list)
     }
 
     @Cacheable
@@ -89,10 +77,6 @@ class MenuServiceImpl : MenuService {
             this.orderByDesc("create_time")
         })
         return this.mapper.toDto(list)
-    }
-
-    override fun findAll(): MutableList<MenuDto> {
-        return this.findList(null)
     }
 
     @Cacheable
@@ -137,21 +121,7 @@ class MenuServiceImpl : MenuService {
     @CacheEvict(allEntries = true)
     @Transactional
     override fun delete(ids: MutableSet<String>) {
-        ids.forEach {
-            val list = this.findByParentId(it, allChild = true)
-            ids.addAll(list.mapNotNull { a -> a.id })
-        }
         val flag = this.repository.deleteBatchIds(ids)
         Assert.isTrue(flag > 0, "删除失败")
-    }
-
-    /**
-     * 仅获取当前节点的所有直接子节点列表，不包括本身
-     */
-    private fun findList(parentId: String): MutableList<MenuDto> {
-        val list = this.repository.selectList(QueryWrapper<Menu>().apply {
-            this.eq("parent_id", parentId)
-        })
-        return this.mapper.toDto(list)
     }
 }

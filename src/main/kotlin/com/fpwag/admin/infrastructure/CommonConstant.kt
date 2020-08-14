@@ -9,14 +9,8 @@ object CommonConstant {
     // authorize
     const val DEFAULT_AUTHORIZE = "Authorization"
     const val DEFAULT_TOKEN_PREFIX = "Bearer "
-    // 过期时间 86400s，即1天
-    const val DEFAULT_TOKEN_EXPIRATION = 86400L
-    // 设置了记住我的过期时间是 604800s，即7天
-    const val DEFAULT_REMEMBER_ME_EXPIRATION = 604800L
     // 加密算法
     const val DEFAULT_ALGORITHM = "hs512"
-    // 默认的主体信息
-    const val DEFAULT_SUBJECT = "subject"
 
     // redis key
     const val IMG_CODE_KEY = "img-code-"

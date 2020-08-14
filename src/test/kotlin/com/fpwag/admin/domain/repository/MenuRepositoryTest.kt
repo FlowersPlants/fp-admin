@@ -11,8 +11,8 @@ class MenuRepositoryTest : ApplicationTest() {
 
     @Test
     fun selectByUserIdTest() {
-        val userId = "1"
-        val list = this.repository.selectByUserId(userId)
+        val userId = "admin"
+        val list = this.repository.selectByUsername(userId)
         Assert.assertNotNull(list)
     }
 

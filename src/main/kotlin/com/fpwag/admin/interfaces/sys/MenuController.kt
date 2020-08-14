@@ -6,6 +6,8 @@ import com.fpwag.admin.domain.dto.input.query.MenuQuery
 import com.fpwag.admin.domain.dto.output.MenuDto
 import com.fpwag.admin.domain.dto.output.MenuTree
 import com.fpwag.admin.domain.service.MenuService
+import com.fpwag.admin.domain.service.UserService
+import com.fpwag.admin.infrastructure.security.SecurityUtils
 import com.fpwag.boot.core.constants.CommonConstants
 import com.fpwag.boot.data.mybatis.PageResult
 import com.fpwag.boot.logging.annotation.SystemLog
@@ -27,6 +29,9 @@ class MenuController {
     @Autowired
     private lateinit var service: MenuService
 
+    @Autowired
+    private lateinit var userService: UserService
+
     /**
      * 获取当前用户菜单树
      */
@@ -34,35 +39,38 @@ class MenuController {
     @ApiOperation("获取当前用户菜单树")
     @GetMapping("build")
     fun tree(): MutableList<MenuTree> {
-        val menus = this.service.findMenus()
+        val username = SecurityUtils.getUsername()
+        val user = this.userService.findByUsername(username)
+        val menus = this.service.findByUsername(username, user?.admin ?: false)
         return this.service.buildTree(menus)
     }
 
-    @SystemLog(value = "获取所有菜单并构建树", type = SystemLog.Type.QUERY)
-    @ApiOperation("获取所有菜单并构建树")
-    @GetMapping("tree")
-    fun getTreeMenu(): MutableList<MenuTree> {
-        val list = this.service.findAll()
-        return this.service.buildTree(list)
-    }
+//    @SystemLog(value = "获取所有菜单并构建树", type = SystemLog.Type.QUERY)
+//    @ApiOperation("获取所有菜单并构建树")
+//    @GetMapping("tree")
+//    fun getTreeMenu(): MutableList<MenuTree> {
+//        val list = this.service.findMenus()
+//        return this.service.buildTree(list)
+//    }
 
-    @SystemLog(value = "返回节点下的全部菜单", type = SystemLog.Type.QUERY)
-    @ApiOperation("返回节点下的全部菜单")
+    @SystemLog(value = "返回子节点列表", type = SystemLog.Type.QUERY)
+    @ApiOperation("返回子节点列表")
     @GetMapping("lazy")
-    fun query(@RequestParam pid: String): MutableList<MenuDto> {
-        return this.service.findByParentId(pid)
+    fun lazy(@RequestParam pid: String): MutableList<MenuDto> {
+        return this.service.findChildren(pid)
     }
 
+    @PreAuthorize("@pms.hasPermission('sys:menu:list')")
     @SystemLog(value = "菜单树查询", type = SystemLog.Type.QUERY)
     @ApiOperation("菜单树查询")
     @GetMapping
-    fun findMenus(query: MenuQuery?): Any {
+    fun query(query: MenuQuery?): Any {
         val list = this.service.findList(query)
         val records = this.service.buildTree(list, parentId = query?.parentId ?: CommonConstants.ROOT_PARENT_ID)
         return PageResult.of<MenuTree>(records.size, records)
     }
 
-    @PreAuthorize("@pms.hasPermission('fun:sys:menu:add')")
+    @PreAuthorize("@pms.hasPermission('sys:menu:add')")
     @SystemLog(value = "新增菜单", type = SystemLog.Type.INSERT)
     @ApiOperation("菜单管理新增接口")
     @PostMapping
@@ -70,6 +78,7 @@ class MenuController {
         return this.service.save(command)
     }
 
+    @PreAuthorize("@pms.hasPermission('sys:menu:edit')")
     @SystemLog(value = "更新菜单", type = SystemLog.Type.UPDATE)
     @ApiOperation("更新菜单")
     @PutMapping
@@ -77,6 +86,7 @@ class MenuController {
         return this.service.update(command)
     }
 
+    @PreAuthorize("@pms.hasPermission('sys:menu:del')")
     @SystemLog(value = "批量删除", type = SystemLog.Type.DELETE)
     @ApiOperation("批量删除接口")
     @DeleteMapping

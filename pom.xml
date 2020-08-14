@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <jjwt.version>0.11.1</jjwt.version>
+        <jjwt.version>0.11.2</jjwt.version>
         <kotlin.version>1.3.72</kotlin.version>
     </properties>
 
@@ -88,11 +88,13 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
             <version>${jjwt.version}</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>${jjwt.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- tools -->

@@ -3,6 +3,7 @@ package com.fpwag.admin.domain.service.impl
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.command.RoleAddCmd
+import com.fpwag.admin.domain.dto.input.command.RoleAssignCmd
 import com.fpwag.admin.domain.dto.input.command.RoleAuthCmd
 import com.fpwag.admin.domain.dto.input.command.RoleEditCmd
 import com.fpwag.admin.domain.dto.input.query.RoleQuery
@@ -23,11 +24,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
-/**
- * 角色service实现类
- * @author FlowersPlants
- * @since v1
- */
 @Service
 @CacheConfig(cacheNames = ["sys_role"])
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = [Exception::class])
@@ -39,7 +35,7 @@ class RoleServiceImpl : RoleService {
     private lateinit var repository: RoleRepository
 
     @Cacheable
-    override fun findPage(query: RoleQuery?, pageable: Pageable): PageResult<RoleDto> {
+    override fun findPage(query: RoleQuery?, pageable: Pageable?): PageResult<RoleDto> {
         val page = MybatisPageMapper.pageableToPage<Role>(pageable)
         val entityPage = this.repository.selectPage(page, QueryWrapper<Role>().apply {
             query?.let {
@@ -67,17 +63,15 @@ class RoleServiceImpl : RoleService {
 
     @Cacheable(key = "#p0")
     override fun findById(id: String?): RoleDto? {
-        if (id.isNullOrBlank()) {
-            return null
-        }
+        if (id.isNullOrBlank()) return null
         val entity = this.repository.selectById(id)
         return this.mapper.toDto(entity)
     }
 
-    @Cacheable(key = "'user_id_' + #p0")
-    override fun findByUserId(userId: String?): MutableList<RoleDto> {
-        if (userId == null) return mutableListOf()
-        val list = this.repository.selectByUserId(userId)
+    @Cacheable(key = "'username_' + #p0")
+    override fun findByUsername(username: String?): MutableList<RoleDto> {
+        if (username == null) return mutableListOf()
+        val list = this.repository.selectByUsername(username)
         return this.mapper.toDto(list)
     }
 
@@ -108,12 +102,18 @@ class RoleServiceImpl : RoleService {
 
     @Transactional
     @CacheEvict(allEntries = true)
-    override fun authMenus(command: RoleAuthCmd?) {
-        command?.let {
-            this.repository.deleteRoleMenuByRoleId(it)
-            val i = this.repository.insertBatchMenuRecord(it)
-            Assert.isTrue(i == it.menuIds?.size, "更新失败")
-        }
+    override fun authMenus(command: RoleAuthCmd) {
+        this.repository.deleteRoleMenus(command.id!!)
+        val i = this.repository.batchRoleMenus(command)
+        Assert.isTrue(i == command.menuIds?.size, "更新失败")
+    }
+
+    @Transactional
+    @CacheEvict(allEntries = true)
+    override fun assignUsers(command: RoleAssignCmd) {
+        this.repository.deleteRoleUsers(command.id!!)
+        val i = this.repository.batchRoleUsers(command)
+        Assert.isTrue(i == command.userIds?.size, "更新失败")
     }
 
     /**

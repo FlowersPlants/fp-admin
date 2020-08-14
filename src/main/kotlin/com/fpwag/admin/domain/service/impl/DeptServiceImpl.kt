@@ -6,7 +6,6 @@ import com.fpwag.admin.domain.dto.input.command.DeptAddCmd
 import com.fpwag.admin.domain.dto.input.command.DeptEditCmd
 import com.fpwag.admin.domain.dto.input.query.DeptQuery
 import com.fpwag.admin.domain.dto.output.DeptDto
-import com.fpwag.admin.domain.dto.output.DeptTree
 import com.fpwag.admin.domain.entity.Dept
 import com.fpwag.admin.domain.mapper.DeptMapper
 import com.fpwag.admin.domain.repository.DeptRepository
@@ -31,9 +30,7 @@ class DeptServiceImpl : DeptService {
     private lateinit var repository: DeptRepository
 
     override fun findById(id: String?): DeptDto? {
-        if (id.isNullOrBlank()) {
-            return null
-        }
+        if (id.isNullOrBlank()) return null
         val entity = this.repository.selectById(id)
         return this.mapper.toDto(entity)
     }
@@ -57,14 +54,6 @@ class DeptServiceImpl : DeptService {
             this.orderByDesc("create_time")
         })
         return this.mapper.toDto(list)
-    }
-
-    override fun findSuperior(id: String?): MutableList<DeptTree> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun buildTree(dtoList: MutableList<DeptDto>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     @CacheEvict(allEntries = true)
