@@ -21,12 +21,13 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 /**
- * 用户管理相关接口
+ * 用户管理
+ *
  * @author FlowersPlants
  * @since v1
  **/
 @SystemLog(value = "用户管理")
-@Api(tags = ["用户相关接口"])
+@Api(tags = ["用户管理"])
 @RestController
 @RequestMapping("/sys/user")
 class UserController {
@@ -36,9 +37,6 @@ class UserController {
     @Autowired
     protected lateinit var systemService: SystemService
 
-    /**
-     * 获取当前登录用户基本信息
-     */
     @SystemLog(value = "获取当前用户信息", type = SystemLog.Type.QUERY)
     @ApiOperation("获取当前用户信息")
     @GetMapping("info")
@@ -51,44 +49,32 @@ class UserController {
         )
     }
 
-    /**
-     * 分页接口
-     */
     @SystemLog(value = "用户分页", type = SystemLog.Type.QUERY)
-    @ApiOperation("用户管理分页接口")
+    @ApiOperation("用户分页")
     @GetMapping
     @PreAuthorize("@pms.hasPermission('sys:user:list')")
     fun findPage(user: UserQuery?, pageable: Pageable): Any? {
         return this.service.findPage(user, pageable)
     }
 
-    /**
-     * 新增接口
-     */
     @SystemLog(value = "新增用户", type = SystemLog.Type.INSERT)
-    @ApiOperation("新增接口")
+    @ApiOperation("新增用户")
     @PostMapping
     @PreAuthorize("@pms.hasPermission('sys:user:add')")
     fun insert(@Validated @RequestBody command: UserAddCmd): Any? {
         return this.service.save(command)
     }
 
-    /**
-     * 修改接口
-     */
-    @SystemLog(value = "修改用户信息", type = SystemLog.Type.UPDATE)
-    @ApiOperation("修改接口")
+    @SystemLog(value = "修改用户", type = SystemLog.Type.UPDATE)
+    @ApiOperation("修改用户")
     @PutMapping
     @PreAuthorize("@pms.hasPermission('sys:user:edit')")
     fun update(@Validated @RequestBody command: UserEditCmd): Any? {
         return this.service.update(command)
     }
 
-    /**
-     * 删除接口（逻辑删除）
-     */
-    @SystemLog(value = "批量删除用户", type = SystemLog.Type.DELETE)
-    @ApiOperation("逻辑删除接口")
+    @SystemLog(value = "删除用户", type = SystemLog.Type.DELETE)
+    @ApiOperation("删除用户")
     @DeleteMapping
     @PreAuthorize("@pms.hasPermission('sys:user:del')")
     fun delete(@RequestBody ids: MutableSet<String>): Any? {

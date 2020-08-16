@@ -5,7 +5,9 @@ import com.fpwag.admin.domain.dto.input.command.RoleAssignCmd
 import com.fpwag.admin.domain.dto.input.command.RoleAuthCmd
 import com.fpwag.admin.domain.dto.input.command.RoleEditCmd
 import com.fpwag.admin.domain.dto.input.query.RoleQuery
+import com.fpwag.admin.domain.dto.output.RoleDto
 import com.fpwag.admin.domain.service.RoleService
+import com.fpwag.boot.data.mybatis.PageResult
 import com.fpwag.boot.logging.annotation.SystemLog
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -16,43 +18,36 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 /**
- * 用户角色管理接口
+ * 角色管理
+ *
+ * @author fpwag
  */
 @SystemLog(value = "角色管理")
-@Api(tags = ["角色管理相关接口"])
+@Api(tags = ["角色管理"])
 @RestController
 @RequestMapping("/sys/role")
 class RoleController {
     @Autowired
     private lateinit var service: RoleService
 
-    /**
-     * 用户角色管理分页
-     */
     @SystemLog(value = "角色分页", type = SystemLog.Type.QUERY)
-    @ApiOperation("分页接口")
+    @ApiOperation("角色分页")
     @GetMapping
     @PreAuthorize("@pms.hasPermission('sys:role:list')")
-    fun findPage(query: RoleQuery, pageable: Pageable): Any? {
+    fun findPage(query: RoleQuery, pageable: Pageable): PageResult<RoleDto>? {
         return this.service.findPage(query, pageable)
     }
 
-    /**
-     * 新增接口
-     */
     @SystemLog(value = "新增角色", type = SystemLog.Type.INSERT)
-    @ApiOperation("新增接口")
+    @ApiOperation("新增角色")
     @PostMapping
     @PreAuthorize("@pms.hasPermission('sys:role:add')")
     fun insert(@Validated @RequestBody command: RoleAddCmd): Any? {
         return this.service.save(command)
     }
 
-    /**
-     * 角色授权接口
-     */
     @SystemLog(value = "角色授权", type = SystemLog.Type.UPDATE)
-    @ApiOperation("角色授权接口")
+    @ApiOperation("角色授权")
     @PostMapping("auth")
     @PreAuthorize("@pms.hasPermission('sys:role:auth')")
     fun roleAuth(@Validated @RequestBody command: RoleAuthCmd): Any? {
@@ -67,22 +62,16 @@ class RoleController {
         return this.service.assignUsers(command)
     }
 
-    /**
-     * 修改接口
-     */
-    @SystemLog(value = "角色信息修改", type = SystemLog.Type.UPDATE)
-    @ApiOperation("修改接口")
+    @SystemLog(value = "修改角色", type = SystemLog.Type.UPDATE)
+    @ApiOperation("修改角色")
     @PutMapping
     @PreAuthorize("@pms.hasPermission('sys:role:edit')")
     fun update(@Validated @RequestBody command: RoleEditCmd): Any? {
         return this.service.update(command)
     }
 
-    /**
-     * 删除接口（逻辑删除）
-     */
-    @SystemLog(value = "根据id删除角色", type = SystemLog.Type.DELETE)
-    @ApiOperation("逻辑删除接口")
+    @SystemLog(value = "删除角色", type = SystemLog.Type.DELETE)
+    @ApiOperation("删除角色")
     @DeleteMapping
     @PreAuthorize("@pms.hasPermission('sys:role:del')")
     fun delete(@RequestBody ids: MutableSet<String>): Any? {

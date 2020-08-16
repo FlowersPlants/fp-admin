@@ -18,11 +18,8 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
-/**
- * 用户菜单管理接口
- */
 @SystemLog(value = "菜单管理")
-@Api(tags = ["系统菜单相关接口"])
+@Api(tags = ["菜单管理"])
 @RestController
 @RequestMapping("/sys/menu")
 class MenuController {
@@ -45,14 +42,6 @@ class MenuController {
         return this.service.buildTree(menus)
     }
 
-//    @SystemLog(value = "获取所有菜单并构建树", type = SystemLog.Type.QUERY)
-//    @ApiOperation("获取所有菜单并构建树")
-//    @GetMapping("tree")
-//    fun getTreeMenu(): MutableList<MenuTree> {
-//        val list = this.service.findMenus()
-//        return this.service.buildTree(list)
-//    }
-
     @SystemLog(value = "返回子节点列表", type = SystemLog.Type.QUERY)
     @ApiOperation("返回子节点列表")
     @GetMapping("lazy")
@@ -72,7 +61,7 @@ class MenuController {
 
     @PreAuthorize("@pms.hasPermission('sys:menu:add')")
     @SystemLog(value = "新增菜单", type = SystemLog.Type.INSERT)
-    @ApiOperation("菜单管理新增接口")
+    @ApiOperation("新增菜单")
     @PostMapping
     fun insert(@Validated @RequestBody command: MenuAddCmd): Any? {
         return this.service.save(command)
@@ -88,7 +77,7 @@ class MenuController {
 
     @PreAuthorize("@pms.hasPermission('sys:menu:del')")
     @SystemLog(value = "批量删除", type = SystemLog.Type.DELETE)
-    @ApiOperation("批量删除接口")
+    @ApiOperation("批量删除")
     @DeleteMapping
     fun delete(@RequestBody ids: MutableSet<String>): Any? {
         return this.service.delete(ids)

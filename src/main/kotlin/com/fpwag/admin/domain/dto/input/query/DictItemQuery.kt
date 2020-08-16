@@ -9,4 +9,5 @@ import com.fpwag.admin.infrastructure.mybatis.support.dto.BaseQuery
  */
 class DictItemQuery : BaseQuery() {
     var dictId: String? = null
+    var dictCode: String? = null
 }

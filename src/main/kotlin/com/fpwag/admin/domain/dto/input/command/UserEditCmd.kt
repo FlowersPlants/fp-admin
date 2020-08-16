@@ -15,7 +15,15 @@ class UserEditCmd {
 
     var name: String? = null
 
+    var mobile: String? = null
+
+    var email: String? = null
+
+    var gender: Int? = null
+
     var sort: Int? = null
+
+    var status: Boolean? = null
 
     var remarks: String? = null
 }

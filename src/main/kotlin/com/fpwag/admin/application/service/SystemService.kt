@@ -41,7 +41,7 @@ class SystemService {
      * @return 权限列表
      */
     fun getAuthorities(username: String?, admin: Boolean = false): Collection<String> {
-        val roles = this.roleService.findByUsername(username).mapNotNull { it.code }
+        val roles = this.roleService.findByUsername(username).mapNotNull { it.code?.toLowerCase() }
         val permissions = this.menuService.findByUsername(username, admin).mapNotNull { it.permission }
         return mutableListOf(*roles.toTypedArray(), *permissions.toTypedArray())
     }

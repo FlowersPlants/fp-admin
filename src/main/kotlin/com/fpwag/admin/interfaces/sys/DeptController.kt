@@ -15,7 +15,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @SystemLog(value = "部门管理")
-@Api(tags = ["部门相关接口"])
+@Api(tags = ["部门管理"])
 @RestController
 @RequestMapping(value = ["/sys/dept"])
 class DeptController {

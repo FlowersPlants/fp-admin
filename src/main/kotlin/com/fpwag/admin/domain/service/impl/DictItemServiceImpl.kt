@@ -1,6 +1,5 @@
 package com.fpwag.admin.domain.service.impl
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.command.DictItemAddCmd
 import com.fpwag.admin.domain.dto.input.command.DictItemEditCmd
@@ -31,15 +30,10 @@ class DictItemServiceImpl : DictItemService {
 
     @Cacheable
     override fun findList(query: DictItemQuery?): MutableList<DictItemDto> {
-        val list = this.repository.selectList(QueryWrapper<DictItem>().apply {
-            query?.let {
-                if (!query.dictId.isNullOrBlank()) {
-                    this.eq("dict_id", query.dictId)
-                }
-            }
-            this.orderByAsc("sort")
-        })
-        return this.mapper.toDto(list)
+        return query?.let {
+            val list = this.repository.selectByDict(query)
+            this.mapper.toDto(list)
+        } ?: mutableListOf()
     }
 
     @Cacheable

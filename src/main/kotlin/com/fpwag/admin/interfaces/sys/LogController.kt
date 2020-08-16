@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @SystemLog(value = "日志管理")
-@Api(tags = ["日志相关接口"])
+@Api(tags = ["日志管理"])
 @RestController
 @RequestMapping("/sys/log")
 class LogController {
     @Autowired
     private lateinit var service: LogService
 
-    @SystemLog(value = "获取日志分页列表", type = SystemLog.Type.QUERY)
-    @ApiOperation("字典日志分页接口")
+    @SystemLog(value = "日志分页", type = SystemLog.Type.QUERY)
+    @ApiOperation("日志分页")
     @GetMapping
     @PreAuthorize("@pms.hasPermission('sys:log:list')")
     fun findPage(query: LogQuery, pageable: Pageable): Any? {

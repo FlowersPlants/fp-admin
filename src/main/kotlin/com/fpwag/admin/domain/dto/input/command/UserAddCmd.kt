@@ -18,5 +18,7 @@ class UserAddCmd {
 
     var sort: Int? = null
 
+    var status: Boolean? = null
+
     var remarks: String? = null
 }

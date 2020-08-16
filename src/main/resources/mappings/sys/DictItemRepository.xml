@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fpwag.admin.domain.repository.DictItemRepository">
+    <select id="selectByDict" parameterType="com.fpwag.admin.domain.dto.input.query.DictItemQuery" resultType="DictItem">
+        select * from sys_dict_item a, sys_dict b where a.enabled = 1 and b.enabled = 1 and a.dict_id = b.id
+        <if test="dictId != null and dictId != ''">
+            and b.id = #{dictId}
+        </if>
+        <if test="dictCode != null and dictCode != ''">
+            and b.code = #{dictCode}
+        </if>
+    </select>
+</mapper>
