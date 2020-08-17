@@ -15,7 +15,6 @@ open class MenuDto : DataDTO() {
 
     var parentId: String? = null
     var permission: String? = null
-    var code: String? = null
     var type: String? = null
     var name: String? = null
     var path: String? = null
@@ -23,22 +22,4 @@ open class MenuDto : DataDTO() {
     var icon: String? = null
     var hidden: Boolean? = null
     var cache: Boolean? = null
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is MenuDto) return false
-
-        if (id != other.id) return false
-        if (parentId != other.parentId) return false
-        if (code != other.code) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + (parentId?.hashCode() ?: 0)
-        result = 31 * result + (code?.hashCode() ?: 0)
-        return result
-    }
 }

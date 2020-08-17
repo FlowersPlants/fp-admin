@@ -16,8 +16,6 @@ class MenuEditCmd {
 
     var name: String? = null
 
-    var code: String? = null
-
     var permission: String? = null
 
     var type: String? = null

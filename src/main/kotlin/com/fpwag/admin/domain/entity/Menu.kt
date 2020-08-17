@@ -30,12 +30,6 @@ class Menu() : DataEntity() {
     var name: String? = null
 
     /**
-     * code，用来保存父子关系的编码
-     * 例如：parent code -> menu_; sys child code -> menu_sys_
-     */
-    var code: String? = null
-
-    /**
      * 权限编码
      * 例如：sys:menu:insert
      */

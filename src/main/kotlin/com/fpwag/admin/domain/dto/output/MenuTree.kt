@@ -20,12 +20,6 @@ class MenuTree : TreeNode() {
     var name: String? = null
 
     /**
-     * code，用来保存父子关系的编码
-     * 例如：parent code -> menu_; sys child code -> menu_sys_
-     */
-    var code: String? = null
-
-    /**
      * 权限编码
      * 例如：sys:menu:insert
      */
@@ -45,11 +39,6 @@ class MenuTree : TreeNode() {
      * 前端页面组件地址
      */
     var component: String? = null
-
-    /**
-     * 前端页面组件名称
-     */
-    var componentName: String? = null
 
     /**
      * 图标名称

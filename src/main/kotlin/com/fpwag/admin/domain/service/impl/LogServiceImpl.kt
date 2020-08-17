@@ -53,7 +53,11 @@ class LogServiceImpl : LogService {
     @Transactional
     override fun save(log: OperationLog?) {
         val entity = this.mapper.map(log)
-        val flag = this.repository.insert(entity)
-        Assert.isTrue(flag > 0, "日志保存失败")
+        this.repository.insert(entity)
+    }
+
+    override fun clear() {
+        val i = this.repository.empty()
+        Assert.isTrue(i == 0, "清空日志表失败")
     }
 }

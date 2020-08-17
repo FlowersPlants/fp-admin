@@ -15,9 +15,6 @@ class MenuAddCmd {
     @NotBlank(message = "菜单名称不能为空")
     var name: String? = null
 
-    @NotBlank(message = "菜单编码不能为空")
-    var code: String? = null
-
     var permission: String? = null
 
     @NotBlank(message = "菜单类型不能为空")

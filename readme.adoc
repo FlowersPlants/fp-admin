@@ -27,6 +27,9 @@
 * [x] jackson的kotlin问题（不能正确序列化）；原因是缺少 `open` 关键字，不确定具体原因
 * [ ] 完善文档
 * [ ] 添加部门信息管理功能，完善授权系统，权限细化到数据级别
+* [ ] 敏感数据脱密处理（可以基于mybatis插件或aop来完成）
+* [ ] 文件上传、下载和预览（接入fpwag-boot-starter-oss模块功能）
+* [ ] 表格导入导出功能（接入fpwag-boot-starter-poi模块功能）
 
 == 问题与解决
 * link:doc/peas.adoc[问题与解决方法]
