@@ -33,6 +33,13 @@ interface MenuService : Service<MenuQuery, MenuDto> {
     fun findChildren(id: String): MutableList<MenuDto>
 
     /**
+     * 根据角色id查询菜单列表
+     *
+     * @param rid 角色id
+     */
+    fun findByRole(rid: String): MutableList<MenuDto>
+
+    /**
      * 根据用户名获取其菜单列表<br>
      * 如果用户是超级管理员则直接获取所有菜单
      *

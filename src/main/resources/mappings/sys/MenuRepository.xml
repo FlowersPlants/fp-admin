@@ -14,4 +14,10 @@
     <select id="selectChildren" resultType="Menu">
         SELECT * FROM sys_menu WHERE FIND_IN_SET(id, FIND_MENU_CHILDREN(#{id}))
     </select>
+
+    <select id="selectByRoleId" resultType="Menu">
+        select a.*
+        from sys_menu a,sys_role_menu rm
+        where a.enabled = 1 and rm.menu_id = a.id and rm.role_id = #{rid}
+    </select>
 </mapper>

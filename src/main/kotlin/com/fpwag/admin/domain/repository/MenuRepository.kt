@@ -27,4 +27,12 @@ interface MenuRepository : BaseMapper<Menu> {
      * @return 所有子节点列表
      */
     fun selectChildren(id: String): MutableList<Menu>
+
+    /**
+     * 根据角色id获取菜单列表
+     *
+     * @param rid 角色id
+     * @return 菜单列表
+     */
+    fun selectByRoleId(rid: String): MutableList<Menu>
 }

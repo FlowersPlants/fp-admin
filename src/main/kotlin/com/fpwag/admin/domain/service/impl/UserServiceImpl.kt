@@ -1,11 +1,13 @@
 package com.fpwag.admin.domain.service.impl
 
+import cn.hutool.core.util.RandomUtil
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
-import com.fpwag.admin.application.event.UserCreatedEvent
+import com.fpwag.admin.domain.event.UpdatePwdEvent
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.UserCommand
 import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
+import com.fpwag.admin.domain.dto.input.command.UserResetPwdCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.dto.output.UserDto
 import com.fpwag.admin.domain.entity.User
@@ -13,6 +15,7 @@ import com.fpwag.admin.domain.mapper.UserMapper
 import com.fpwag.admin.domain.repository.UserRepository
 import com.fpwag.admin.domain.service.UserService
 import com.fpwag.boot.autoconfigure.web.SpringContextHolder
+import com.fpwag.boot.core.constants.CommonConstants
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.data.mybatis.MybatisPageMapper
 import com.fpwag.boot.data.mybatis.PageResult
@@ -24,6 +27,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.DigestUtils
 
 /**
  * 用户service实现类
@@ -44,6 +48,12 @@ class UserServiceImpl : UserService {
     override fun findByUsername(username: String?): UserDto? {
         val entity = this.findOne(username = username)
         return this.mapper.toDto(entity)
+    }
+
+    @Cacheable(key = "'rid_' + #p0")
+    override fun findByRole(rid: String): MutableList<UserDto> {
+        val list = this.repository.selectByRoleId(rid)
+        return this.mapper.toDto(list)
     }
 
     @Cacheable(key = "'id_' + #p0")
@@ -96,7 +106,7 @@ class UserServiceImpl : UserService {
         Assert.isTrue(flag > 0, "更新失败")
 
         // 发布用户创建成功事件。设置默认密码
-        SpringContextHolder.publishEvent(UserCreatedEvent(entity))
+        SpringContextHolder.publishEvent(UpdatePwdEvent(mutableListOf(entity)))
     }
 
     @CacheEvict(allEntries = true)
@@ -118,6 +128,23 @@ class UserServiceImpl : UserService {
             UserCommand.Type.AVATAR -> user.avatar = command.value
         }
         this.repository.updateById(user)
+    }
+
+    override fun resetPwd(command: UserResetPwdCmd): String {
+        var defaultPwd = "fpwag1234!"
+        var encryptPassword = CommonConstants.DEFAULT_USER_PWD
+        if (command.random) {
+            defaultPwd = RandomUtil.randomString(12)
+            encryptPassword = DigestUtils.md5DigestAsHex(defaultPwd.toByteArray())
+        }
+        val list = command.ids.map {
+            User().apply {
+                this.id = it
+                this.password = encryptPassword
+            }
+        }
+        SpringContextHolder.publishEvent(UpdatePwdEvent(list))
+        return defaultPwd
     }
 
     @CacheEvict(allEntries = true)

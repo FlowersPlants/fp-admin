@@ -8,7 +8,6 @@ import javax.validation.constraints.NotBlank
  * @author fpwag
  */
 class UserAddCmd {
-    @NotBlank(message = "所属部门不能为空")
     var deptId: String? = null
 
     @NotBlank(message = "用户名不能为空")

@@ -11,15 +11,12 @@ import com.fpwag.admin.infrastructure.security.SecurityUtils
 import com.fpwag.boot.core.constants.CommonConstants
 import com.fpwag.boot.data.mybatis.PageResult
 import com.fpwag.boot.logging.annotation.SystemLog
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @SystemLog(value = "菜单管理")
-@Api(tags = ["菜单管理"])
 @RestController
 @RequestMapping("/sys/menu")
 class MenuController {
@@ -32,8 +29,6 @@ class MenuController {
     /**
      * 获取当前用户菜单树
      */
-    @SystemLog(value = "获取当前用户菜单树", type = SystemLog.Type.QUERY)
-    @ApiOperation("获取当前用户菜单树")
     @GetMapping("build")
     fun tree(): MutableList<MenuTree> {
         val username = SecurityUtils.getUsername()
@@ -42,16 +37,18 @@ class MenuController {
         return this.service.buildTree(menus)
     }
 
-    @SystemLog(value = "返回子节点列表", type = SystemLog.Type.QUERY)
-    @ApiOperation("返回子节点列表")
     @GetMapping("lazy")
     fun lazy(@RequestParam pid: String): MutableList<MenuDto> {
         return this.service.findChildren(pid)
     }
 
+    @GetMapping("{rid}")
+    fun findByRole(@PathVariable("rid") rid: String): MutableList<MenuDto> {
+        return this.service.findByRole(rid)
+    }
+
     @PreAuthorize("@pms.hasPermission('sys:menu:list')")
     @SystemLog(value = "菜单树查询", type = SystemLog.Type.QUERY)
-    @ApiOperation("菜单树查询")
     @GetMapping
     fun query(query: MenuQuery?): Any {
         val list = this.service.findList(query)
@@ -61,7 +58,6 @@ class MenuController {
 
     @PreAuthorize("@pms.hasPermission('sys:menu:add')")
     @SystemLog(value = "新增菜单", type = SystemLog.Type.INSERT)
-    @ApiOperation("新增菜单")
     @PostMapping
     fun insert(@Validated @RequestBody command: MenuAddCmd): Any? {
         return this.service.save(command)
@@ -69,7 +65,6 @@ class MenuController {
 
     @PreAuthorize("@pms.hasPermission('sys:menu:edit')")
     @SystemLog(value = "更新菜单", type = SystemLog.Type.UPDATE)
-    @ApiOperation("更新菜单")
     @PutMapping
     fun update(@Validated @RequestBody command: MenuEditCmd): Any? {
         return this.service.update(command)
@@ -77,7 +72,6 @@ class MenuController {
 
     @PreAuthorize("@pms.hasPermission('sys:menu:del')")
     @SystemLog(value = "批量删除", type = SystemLog.Type.DELETE)
-    @ApiOperation("批量删除")
     @DeleteMapping
     fun delete(@RequestBody ids: MutableSet<String>): Any? {
         return this.service.delete(ids)

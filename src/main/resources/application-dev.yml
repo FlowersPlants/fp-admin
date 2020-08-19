@@ -40,7 +40,7 @@ fpwag-boot:
       enable: true
       output-trace: true # 输出异常堆栈
   swagger:
-    enable: true
+    enable: false # 关闭swagger配置
   redis:
     enable: false # 关闭spring cache缓存注解
   oss: # 对象存储配置，使用本地存储
@@ -56,7 +56,7 @@ fpwag-boot:
 fp-admin:
   ignore-urls: /oss/**, /test/** # 仅测试用的
   image-code:
-    enable: false
+    enable: true
   cors:
     enable: true
   jwt:

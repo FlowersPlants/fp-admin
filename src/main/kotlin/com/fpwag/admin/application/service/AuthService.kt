@@ -54,7 +54,7 @@ class AuthService(private var properties: FpAdminProperties) {
 
         this.redisOperation.set(uuid, code, this.properties.imageCode.expiration)
         return mutableMapOf(
-                "img" to "data:image/png;base64,${captcha.imageBase64}",
+                "img" to captcha.imageBase64Data,
                 "uuid" to uuid
         )
     }

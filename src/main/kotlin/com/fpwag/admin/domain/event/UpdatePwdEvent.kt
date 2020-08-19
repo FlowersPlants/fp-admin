@@ -1,9 +1,9 @@
-package com.fpwag.admin.application.event
+package com.fpwag.admin.domain.event
 
 import org.springframework.context.ApplicationEvent
 
 /**
- * 修改密码事件
+ * 修改密码事件源
  *
  * @author fpwag
  */

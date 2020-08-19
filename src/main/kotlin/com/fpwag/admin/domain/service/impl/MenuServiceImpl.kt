@@ -49,6 +49,12 @@ class MenuServiceImpl : MenuService {
         return this.mapper.toDto(list)
     }
 
+    @Cacheable(key = "'rid_' + #p0")
+    override fun findByRole(rid: String): MutableList<MenuDto> {
+        val list = this.repository.selectByRoleId(rid)
+        return this.mapper.toDto(list)
+    }
+
     @Cacheable(key = "'username_' + #p0")
     override fun findByUsername(username: String?, admin: Boolean): MutableList<MenuDto> {
         if (username.isNullOrBlank()) return mutableListOf()

@@ -3,17 +3,15 @@ package com.fpwag.admin.interfaces.sys
 import com.fpwag.admin.application.service.SystemService
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.UserCommand
+import com.fpwag.admin.domain.dto.input.command.UserResetPwdCmd
 import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
 import com.fpwag.admin.domain.dto.input.command.UserUpdatePwdCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
+import com.fpwag.admin.domain.dto.output.UserDto
 import com.fpwag.admin.domain.service.UserService
 import com.fpwag.admin.infrastructure.security.SecurityUtils
 import com.fpwag.boot.logging.annotation.SystemLog
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiImplicitParam
-import io.swagger.annotations.ApiImplicitParams
-import io.swagger.annotations.ApiOperation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.*
  * @since v1
  **/
 @SystemLog(value = "用户管理")
-@Api(tags = ["用户管理"])
 @RestController
 @RequestMapping("/sys/user")
 class UserController {
@@ -37,8 +34,6 @@ class UserController {
     @Autowired
     protected lateinit var systemService: SystemService
 
-    @SystemLog(value = "获取当前用户信息", type = SystemLog.Type.QUERY)
-    @ApiOperation("获取当前用户信息")
     @GetMapping("info")
     fun getInfo(): Any {
         val username = SecurityUtils.getUsername()
@@ -49,53 +44,48 @@ class UserController {
         )
     }
 
-    @SystemLog(value = "用户分页", type = SystemLog.Type.QUERY)
-    @ApiOperation("用户分页")
-    @GetMapping
+    @GetMapping("{rid}")
+    fun findByRole(@PathVariable("rid") rid: String): MutableList<UserDto> {
+        return this.service.findByRole(rid)
+    }
+
     @PreAuthorize("@pms.hasPermission('sys:user:list')")
+    @SystemLog(value = "用户分页", type = SystemLog.Type.QUERY)
+    @GetMapping
     fun findPage(user: UserQuery?, pageable: Pageable): Any? {
         return this.service.findPage(user, pageable)
     }
 
-    @SystemLog(value = "新增用户", type = SystemLog.Type.INSERT)
-    @ApiOperation("新增用户")
-    @PostMapping
     @PreAuthorize("@pms.hasPermission('sys:user:add')")
+    @SystemLog(value = "新增用户", type = SystemLog.Type.INSERT)
+    @PostMapping
     fun insert(@Validated @RequestBody command: UserAddCmd): Any? {
         return this.service.save(command)
     }
 
-    @SystemLog(value = "修改用户", type = SystemLog.Type.UPDATE)
-    @ApiOperation("修改用户")
-    @PutMapping
     @PreAuthorize("@pms.hasPermission('sys:user:edit')")
+    @SystemLog(value = "修改用户", type = SystemLog.Type.UPDATE)
+    @PutMapping
     fun update(@Validated @RequestBody command: UserEditCmd): Any? {
         return this.service.update(command)
     }
 
-    @SystemLog(value = "删除用户", type = SystemLog.Type.DELETE)
-    @ApiOperation("删除用户")
-    @DeleteMapping
     @PreAuthorize("@pms.hasPermission('sys:user:del')")
+    @SystemLog(value = "删除用户", type = SystemLog.Type.DELETE)
+    @DeleteMapping
     fun delete(@RequestBody ids: MutableSet<String>): Any? {
         return this.service.delete(ids)
     }
 
-    // 以下为个人信息修改接口
+    @PreAuthorize("@pms.hasPermission('sys:user:repwd')")
     @SystemLog(value = "重置密码", type = SystemLog.Type.UPDATE)
-    @ApiOperation("重置密码")
-    @ApiImplicitParam(name = "random", value = "密码是否随机生成", required = false)
-    @PutMapping(value = ["{username}/reset-pwd"])
-    fun resetPwd(@PathVariable("username") username: String, random: Boolean = false): String {
-        return this.systemService.resetPwd(username, random)
+    @PutMapping("repwd")
+    fun resetPwd(@RequestBody command: UserResetPwdCmd): String {
+        return this.service.resetPwd(command)
     }
 
+    // 以下为个人信息修改接口
     @SystemLog(value = "修改密码", type = SystemLog.Type.UPDATE)
-    @ApiOperation("修改密码")
-    @ApiImplicitParams(value = [
-        ApiImplicitParam(name = "oldEncryptPwd", value = "旧密码（md5加密）", required = true),
-        ApiImplicitParam(name = "encryptPwd", value = "新密码（md5加密）", required = true)
-    ])
     @PutMapping(value = ["{userId}/update-pwd"])
     @Deprecated("暂时去掉", ReplaceWith("this.updatePwd(username, command)"))
     fun updatePwd(@PathVariable("userId") userId: String, oldEncryptPwd: String, encryptPwd: String): Any? {
@@ -103,10 +93,9 @@ class UserController {
     }
 
     @SystemLog(value = "修改状态", type = SystemLog.Type.UPDATE)
-    @ApiOperation("修改状态")
     @PutMapping(value = ["us"])
     fun updateStatus(@RequestBody command: UpdateStatusCmd): Any? {
-        return null
+        return this.service.updateStatus(command)
     }
 
     @PutMapping("{id}/up")
@@ -115,16 +104,12 @@ class UserController {
     }
 
     @SystemLog(value = "修改邮箱", type = SystemLog.Type.UPDATE)
-    @ApiOperation("修改邮箱")
-    @ApiImplicitParam(name = "email", value = "用户邮箱", required = true)
     @PutMapping(value = ["{id}/ue"])
     fun updateEmail(@PathVariable("id") id: String, email: String): Any? {
         return this.service.updateInfo(UserCommand(id, UserCommand.Type.EMAIL, email))
     }
 
     @SystemLog(value = "修改头像", type = SystemLog.Type.UPDATE)
-    @ApiOperation("修改头像")
-    @ApiImplicitParam(name = "avatar", value = "用户头像地址", required = true)
     @PutMapping(value = ["{id}/ua"])
     fun updateAvatar(@PathVariable("id") id: String, avatar: String): Any? {
         return this.service.updateInfo(UserCommand(id, UserCommand.Type.AVATAR, avatar))
