@@ -37,14 +37,16 @@ class AuthService(private var properties: FpAdminProperties) {
     @Autowired
     private lateinit var authenticationManagerBuilder: AuthenticationManagerBuilder
 
-    private lateinit var captcha: LineCaptcha
+    private var captcha: LineCaptcha = LineCaptcha(111, 36, 5, 30)
+
+    init {
+        captcha.generator = MathGenerator(1)
+    }
 
     /**
      * hutool 图片验证码
      */
     fun getCode(): Any {
-        captcha = LineCaptcha(111, 36, 5, 30)
-        captcha.generator = MathGenerator(1)
         val code = captcha.code // 此code并不是计算后的结果，而是一个算术表达式
         val uuid: String = this.properties.imageCode.codeKey + IdUtils.snowflakeId()
 
@@ -75,7 +77,7 @@ class AuthService(private var properties: FpAdminProperties) {
         }
 
         val authenticationToken = UsernamePasswordAuthenticationToken(loginUser.username, loginUser.password)
-        val authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken)
+        val authentication = this.authenticationManagerBuilder.getObject().authenticate(authenticationToken)
         SecurityContextHolder.getContext().authentication = authentication
         val token = this.tokenProvider.createToken(authentication)
 

@@ -44,7 +44,6 @@ class UserServiceImpl : UserService {
     @Autowired
     private lateinit var repository: UserRepository
 
-    @Cacheable(key = "'username_' + #p0")
     override fun findByUsername(username: String?): UserDto? {
         val entity = this.findOne(username = username)
         return this.mapper.toDto(entity)
