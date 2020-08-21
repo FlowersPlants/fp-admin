@@ -13,6 +13,8 @@ import com.fpwag.admin.domain.dto.output.UserDto
 import com.fpwag.admin.domain.entity.User
 import com.fpwag.admin.domain.mapper.UserMapper
 import com.fpwag.admin.domain.repository.UserRepository
+import com.fpwag.admin.domain.service.MenuService
+import com.fpwag.admin.domain.service.RoleService
 import com.fpwag.admin.domain.service.UserService
 import com.fpwag.boot.autoconfigure.web.SpringContextHolder
 import com.fpwag.boot.core.constants.CommonConstants
@@ -43,6 +45,19 @@ class UserServiceImpl : UserService {
 
     @Autowired
     private lateinit var repository: UserRepository
+
+    @Autowired
+    private lateinit var roleService: RoleService
+
+    @Autowired
+    private lateinit var menuService: MenuService
+
+    @Cacheable(key = "'username_' + #p0 + #p1==true ? '_1' : '_0'")
+    override fun getAuthorities(username: String?, admin: Boolean): Collection<String> {
+        val roles = this.roleService.findByUsername(username).mapNotNull { it.code?.toLowerCase() }
+        val permissions = this.menuService.findByUsername(username, admin).mapNotNull { it.permission }
+        return mutableListOf(*roles.toTypedArray(), *permissions.toTypedArray())
+    }
 
     override fun findByUsername(username: String?): UserDto? {
         val entity = this.findOne(username = username)
@@ -129,6 +144,8 @@ class UserServiceImpl : UserService {
         this.repository.updateById(user)
     }
 
+    @CacheEvict(allEntries = true)
+    @Transactional
     override fun resetPwd(command: UserResetPwdCmd): String {
         var defaultPwd = "fpwag1234!"
         var encryptPassword = CommonConstants.DEFAULT_USER_PWD

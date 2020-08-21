@@ -39,7 +39,7 @@ fpwag-boot:
   swagger:
     enable: false # 关闭swagger接口文档
   redis:
-    enable: true # 开启spring cache缓存注解
+    enable: false # 关闭spring cache缓存注解
     # 自定义缓存过期等策略
     cache-accept:
       - key: sys_user

@@ -68,7 +68,6 @@ class RoleServiceImpl : RoleService {
         return this.mapper.toDto(entity)
     }
 
-    @Cacheable(key = "'username_' + #p0")
     override fun findByUsername(username: String?): MutableList<RoleDto> {
         if (username == null) return mutableListOf()
         val list = this.repository.selectByUsername(username)

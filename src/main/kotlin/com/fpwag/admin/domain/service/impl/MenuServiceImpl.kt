@@ -55,7 +55,6 @@ class MenuServiceImpl : MenuService {
         return this.mapper.toDto(list)
     }
 
-    @Cacheable(key = "'username_' + #p0")
     override fun findByUsername(username: String?, admin: Boolean): MutableList<MenuDto> {
         if (username.isNullOrBlank()) return mutableListOf()
         if (admin) return this.findList(null)

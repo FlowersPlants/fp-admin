@@ -37,17 +37,15 @@ class AuthService(private var properties: FpAdminProperties) {
     @Autowired
     private lateinit var authenticationManagerBuilder: AuthenticationManagerBuilder
 
-    private var captcha: LineCaptcha = LineCaptcha(111, 36, 5, 30)
-
-    init {
-        captcha.generator = MathGenerator(1)
-    }
+    private lateinit var captcha: LineCaptcha
 
     /**
      * hutool 图片验证码
      */
     fun getCode(): Any {
-        val code = captcha.code // 此code并不是计算后的结果，而是一个算术表达式
+        this.captcha = LineCaptcha(111, 36, 5, 30)
+        this.captcha.generator = MathGenerator(1)
+        val code = this.captcha.code // 此code并不是计算后的结果，而是一个算术表达式
         val uuid: String = this.properties.imageCode.codeKey + IdUtils.snowflakeId()
 
         if (LOGGER.isInfoEnabled) {
@@ -73,7 +71,7 @@ class AuthService(private var properties: FpAdminProperties) {
             val code = this.redisOperation.get(loginUser.uuid) as? String
             this.redisOperation.del(loginUser.uuid)
             Assert.isTrue(!code.isNullOrBlank(), "验证码不存在或已过期")
-            Assert.isTrue(!loginUser.code.isNullOrBlank() && captcha.generator.verify(code, loginUser.code), "验证码错误")
+            Assert.isTrue(!loginUser.code.isNullOrBlank() && this.captcha.generator.verify(code, loginUser.code), "验证码错误")
         }
 
         val authenticationToken = UsernamePasswordAuthenticationToken(loginUser.username, loginUser.password)

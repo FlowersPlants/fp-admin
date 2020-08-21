@@ -16,6 +16,15 @@ import com.fpwag.admin.infrastructure.mybatis.support.Service
  */
 interface UserService : Service<UserQuery, UserDto> {
     /**
+     * 获取某个用户的所有权限和角色集合
+     *
+     * @param username 用户名
+     * @param admin 是否超级管理员，默认false
+     * @return 权限列表
+     */
+    fun getAuthorities(username: String?, admin: Boolean = false): Collection<String>
+
+    /**
      * 返回包含密码等敏感信息
      *
      * @param username 用户名

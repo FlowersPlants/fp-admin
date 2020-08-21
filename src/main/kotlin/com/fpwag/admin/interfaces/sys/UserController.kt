@@ -1,11 +1,10 @@
 package com.fpwag.admin.interfaces.sys
 
-import com.fpwag.admin.application.service.SystemService
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.UserCommand
-import com.fpwag.admin.domain.dto.input.command.UserResetPwdCmd
 import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
+import com.fpwag.admin.domain.dto.input.command.UserResetPwdCmd
 import com.fpwag.admin.domain.dto.input.command.UserUpdatePwdCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.dto.output.UserDto
@@ -31,16 +30,13 @@ class UserController {
     @Autowired
     private lateinit var service: UserService
 
-    @Autowired
-    protected lateinit var systemService: SystemService
-
     @GetMapping("info")
     fun getInfo(): Any {
         val username = SecurityUtils.getUsername()
         val info = this.service.findByUsername(username)
         return mutableMapOf(
                 "info" to info,
-                "authorities" to this.systemService.getAuthorities(username, info?.admin ?: false)
+                "authorities" to this.service.getAuthorities(username, info?.admin ?: false)
         )
     }
 
@@ -89,7 +85,7 @@ class UserController {
     @PutMapping(value = ["{userId}/update-pwd"])
     @Deprecated("暂时去掉", ReplaceWith("this.updatePwd(username, command)"))
     fun updatePwd(@PathVariable("userId") userId: String, oldEncryptPwd: String, encryptPwd: String): Any? {
-        return this.systemService.updatePwd(userId, oldEncryptPwd, encryptPwd)
+        return null
     }
 
     @SystemLog(value = "修改状态", type = SystemLog.Type.UPDATE)
@@ -98,8 +94,9 @@ class UserController {
         return this.service.updateStatus(command)
     }
 
-    @PutMapping("{id}/up")
-    fun updatePwd(@PathVariable("id") id: String, @RequestBody command: UserUpdatePwdCmd): Any? {
+    @SystemLog(value = "修改密码", type = SystemLog.Type.UPDATE)
+    @PutMapping("up")
+    fun updatePwd(@RequestBody command: UserUpdatePwdCmd): Any? {
         return null
     }
 

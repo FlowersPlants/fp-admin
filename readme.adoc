@@ -30,6 +30,7 @@
 * [ ] 敏感数据脱密处理（可以基于mybatis插件或aop来完成）
 * [ ] 文件上传、下载和预览（接入fpwag-boot-starter-oss模块功能）
 * [ ] 表格导入导出功能（接入fpwag-boot-starter-poi模块功能）
+* [ ] redis缓存需要调整，问题有点多。
 
 == 问题与解决
 * link:doc/peas.adoc[问题与解决方法]

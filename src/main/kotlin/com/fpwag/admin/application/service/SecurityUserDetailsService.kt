@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service
 class SecurityUserDetailsService : UserDetailsService {
     @Autowired
     private lateinit var userService: UserService
-    @Autowired
-    private lateinit var systemService: SystemService
 
     /**
      * 根据用户名获取用户详情
@@ -36,7 +34,7 @@ class SecurityUserDetailsService : UserDetailsService {
         Assert.isTrue(user != null, "用户名或密码错误")
         Assert.isTrue(user!!.status == true, "用户已禁用，请联系管理员")
 
-        val authorityList = this.systemService.getAuthorities(username, user.admin)
+        val authorityList = this.userService.getAuthorities(username, user.admin)
         val authorities = AuthorityUtils.createAuthorityList(*authorityList.toTypedArray())
 
         return User(user.username!!, user.password!!, authorities)
