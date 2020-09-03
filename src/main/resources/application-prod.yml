@@ -51,5 +51,5 @@ fp-admin:
     enable: true
   cors:
     enable: true # 开启跨越处理
-  jwts:
+  jwt:
     secret-key: MGViMDY5YjAxZmU0NWFlNmU1MWJmYmMwMDYxYTEwZjUxZDAwZTU3Y2JiMjZlZjQ4YzEwMmYxMDQyOGRjNGVjM2ZlY2Q=
