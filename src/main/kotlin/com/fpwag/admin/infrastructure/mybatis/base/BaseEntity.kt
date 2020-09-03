@@ -1,4 +1,4 @@
-package com.fpwag.admin.infrastructure.mybatis.support.model
+package com.fpwag.admin.infrastructure.mybatis.base
 
 import com.baomidou.mybatisplus.annotation.*
 import com.fpwag.admin.infrastructure.CommonConstant

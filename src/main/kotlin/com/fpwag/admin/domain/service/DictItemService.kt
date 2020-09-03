@@ -4,7 +4,7 @@ import com.fpwag.admin.domain.dto.input.command.DictItemAddCmd
 import com.fpwag.admin.domain.dto.input.command.DictItemEditCmd
 import com.fpwag.admin.domain.dto.input.query.DictItemQuery
 import com.fpwag.admin.domain.dto.output.DictItemDto
-import com.fpwag.admin.infrastructure.mybatis.support.Service
+import com.fpwag.admin.infrastructure.mybatis.base.Service
 
 /**
  * 字典项业务功能

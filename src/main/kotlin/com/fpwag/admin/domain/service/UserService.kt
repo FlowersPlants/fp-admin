@@ -6,7 +6,7 @@ import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.dto.output.UserDto
-import com.fpwag.admin.infrastructure.mybatis.support.Service
+import com.fpwag.admin.infrastructure.mybatis.base.Service
 
 /**
  * 用户相关接口

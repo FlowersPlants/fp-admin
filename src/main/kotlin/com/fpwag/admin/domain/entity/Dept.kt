@@ -2,7 +2,7 @@ package com.fpwag.admin.domain.entity
 
 import com.baomidou.mybatisplus.annotation.TableName
 import com.fpwag.admin.infrastructure.CommonConstant
-import com.fpwag.admin.infrastructure.mybatis.support.model.DataEntity
+import com.fpwag.admin.infrastructure.mybatis.base.DataEntity
 
 /**
  * 部门信息

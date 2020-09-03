@@ -1,7 +1,7 @@
 package com.fpwag.admin.domain.dto.output
 
 import com.fpwag.admin.domain.entity.Dept
-import com.fpwag.admin.infrastructure.mybatis.support.dto.DataDTO
+import com.fpwag.admin.infrastructure.mybatis.base.DataDTO
 
 open class DeptDto : DataDTO() {
     var parent: DeptDto? = null

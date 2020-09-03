@@ -39,8 +39,8 @@ class LogServiceImpl : LogService {
                 if (!it.method.isNullOrBlank()) {
                     this.eq("method", it.method)
                 }
-                if (!it.startTime.isNullOrBlank() && !it.endTime.isNullOrBlank()) {
-                    this.between("create_time", it.startTime, it.endTime)
+                if (it.createTime.isNotEmpty() && it.createTime.size == 2) {
+                    this.between("create_time", it.createTime[0], it.createTime[1])
                 }
             }
             if (page.orders.isEmpty()) {

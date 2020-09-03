@@ -1,6 +1,5 @@
 package com.fpwag.admin.domain.service.impl
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.command.DeptAddCmd
 import com.fpwag.admin.domain.dto.input.command.DeptEditCmd
@@ -10,6 +9,7 @@ import com.fpwag.admin.domain.entity.Dept
 import com.fpwag.admin.domain.mapper.DeptMapper
 import com.fpwag.admin.domain.repository.DeptRepository
 import com.fpwag.admin.domain.service.DeptService
+import com.fpwag.admin.infrastructure.mybatis.QueryUtils
 import com.fpwag.boot.core.exception.Assert
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
@@ -37,22 +37,15 @@ class DeptServiceImpl : DeptService {
 
     @Cacheable
     override fun findList(query: DeptQuery?): MutableList<DeptDto> {
-        val list = this.repository.selectList(QueryWrapper<Dept>().apply {
+        val wrapper = QueryUtils.build<Dept, DeptQuery>(query, "name").apply {
             query?.let {
-                if (!it.keyword.isNullOrBlank()) {
-                    this.likeRight("name", it.keyword)
-                    this.or()
-                    this.likeRight("remarks", it.keyword)
-                }
                 if (!it.parentId.isNullOrBlank()) {
                     this.eq("parent_id", it.parentId)
                 }
-                if (!it.startTime.isNullOrBlank() && !it.endTime.isNullOrBlank()) {
-                    this.between("create_time", it.startTime, it.endTime)
-                }
             }
             this.orderByDesc("create_time")
-        })
+        }
+        val list = this.repository.selectList(wrapper)
         return this.mapper.toDto(list)
     }
 

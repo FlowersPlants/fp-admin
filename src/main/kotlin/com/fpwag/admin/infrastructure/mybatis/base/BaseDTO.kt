@@ -1,4 +1,4 @@
-package com.fpwag.admin.infrastructure.mybatis.support.dto
+package com.fpwag.admin.infrastructure.mybatis.base
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fpwag.admin.infrastructure.CommonConstant

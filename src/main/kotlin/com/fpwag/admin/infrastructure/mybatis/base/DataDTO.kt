@@ -1,6 +1,7 @@
-package com.fpwag.admin.infrastructure.mybatis.support.dto
+package com.fpwag.admin.infrastructure.mybatis.base
 
 import com.fpwag.admin.infrastructure.CommonConstant
+import com.fpwag.admin.infrastructure.mybatis.base.BaseDTO
 import java.time.LocalDateTime
 
 /**

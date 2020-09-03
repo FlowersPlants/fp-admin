@@ -1,6 +1,5 @@
 package com.fpwag.admin.domain.service.impl
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.command.RoleAddCmd
 import com.fpwag.admin.domain.dto.input.command.RoleAssignCmd
@@ -12,6 +11,7 @@ import com.fpwag.admin.domain.entity.Role
 import com.fpwag.admin.domain.mapper.RoleMapper
 import com.fpwag.admin.domain.repository.RoleRepository
 import com.fpwag.admin.domain.service.RoleService
+import com.fpwag.admin.infrastructure.mybatis.QueryUtils
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.data.mybatis.MybatisPageMapper
 import com.fpwag.boot.data.mybatis.PageResult
@@ -37,27 +37,20 @@ class RoleServiceImpl : RoleService {
     @Cacheable
     override fun findPage(query: RoleQuery?, pageable: Pageable?): PageResult<RoleDto> {
         val page = MybatisPageMapper.pageableToPage<Role>(pageable)
-        val entityPage = this.repository.selectPage(page, QueryWrapper<Role>().apply {
+        val wrapper = QueryUtils.build<Role, RoleQuery>(query, "name").apply {
             query?.let {
-                if (!it.keyword.isNullOrBlank()) {
-                    this.likeRight("name", it.keyword)
-                    this.or()
-                    this.likeRight("remarks", it.keyword)
-                }
                 if (it.level != null) {
                     this.eq("level", it.level)
                 }
                 if (!it.code.isNullOrBlank()) {
                     this.eq("code", it.code)
                 }
-                if (!it.startTime.isNullOrBlank() && !it.endTime.isNullOrBlank()) {
-                    this.between("create_time", it.startTime, it.endTime)
-                }
             }
             if (page.orders.isEmpty()) {
                 this.orderByDesc("create_time")
             }
-        })
+        }
+        val entityPage = this.repository.selectPage(page, wrapper)
         return PageResult.of(entityPage) { this.mapper.toDto(it) }
     }
 

@@ -2,7 +2,6 @@ package com.fpwag.admin.domain.service.impl
 
 import cn.hutool.core.util.RandomUtil
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
-import com.fpwag.admin.domain.event.UpdatePwdEvent
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
 import com.fpwag.admin.domain.dto.input.UserCommand
 import com.fpwag.admin.domain.dto.input.command.UserAddCmd
@@ -11,11 +10,13 @@ import com.fpwag.admin.domain.dto.input.command.UserResetPwdCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.dto.output.UserDto
 import com.fpwag.admin.domain.entity.User
+import com.fpwag.admin.domain.event.UpdatePwdEvent
 import com.fpwag.admin.domain.mapper.UserMapper
 import com.fpwag.admin.domain.repository.UserRepository
 import com.fpwag.admin.domain.service.MenuService
 import com.fpwag.admin.domain.service.RoleService
 import com.fpwag.admin.domain.service.UserService
+import com.fpwag.admin.infrastructure.mybatis.QueryUtils
 import com.fpwag.boot.autoconfigure.web.SpringContextHolder
 import com.fpwag.boot.core.constants.CommonConstants
 import com.fpwag.boot.core.exception.Assert
@@ -79,13 +80,8 @@ class UserServiceImpl : UserService {
     @Cacheable
     override fun findPage(query: UserQuery?, pageable: Pageable?): PageResult<UserDto> {
         val page = MybatisPageMapper.pageableToPage<User>(pageable)
-        val entityPage = this.repository.selectPage(page, QueryWrapper<User>().apply {
+        val wrapper = QueryUtils.build<User, UserQuery>(query, "name").apply {
             query?.let {
-                if (!it.keyword.isNullOrBlank()) {
-                    this.likeRight("name", it.keyword)
-                    this.or()
-                    this.likeRight("remarks", it.keyword)
-                }
                 if (!it.deptId.isNullOrBlank()) {
                     this.eq("dept_id", it.deptId)
                 }
@@ -98,14 +94,12 @@ class UserServiceImpl : UserService {
                 if (!it.mobile.isNullOrBlank()) {
                     this.likeRight("mobile", it.mobile)
                 }
-                if (!it.startTime.isNullOrBlank() && !it.endTime.isNullOrBlank()) {
-                    this.between("create_time", it.startTime, it.endTime)
-                }
             }
             if (page.orders.isEmpty()) {
                 this.orderByDesc("create_time")
             }
-        })
+        }
+        val entityPage = this.repository.selectPage(page, wrapper)
         return PageResult.of(entityPage) { this.mapper.toDto(it) }
     }
 

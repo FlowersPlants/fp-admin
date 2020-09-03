@@ -24,4 +24,4 @@ mybatis-plus:
   global-config:
     banner: false
   type-aliases-package: com.fpwag.admin.domain.entity # 别名扫描
-  type-aliases-super-type: com.fpwag.admin.infrastructure.mybatis.support.model.BaseEntity # 别名扫描父类，配合type-aliases-package使用
+  type-aliases-super-type: com.fpwag.admin.infrastructure.mybatis.base.BaseEntity # 别名扫描父类，配合type-aliases-package使用

@@ -105,7 +105,7 @@ class FpAdminProperties {
         /**
          * token secret key, cannot be null.
          */
-        var secretKey: String? = null
+        lateinit var secretKey: String
         /**
          * token encode algorithm, default hs256.
          */

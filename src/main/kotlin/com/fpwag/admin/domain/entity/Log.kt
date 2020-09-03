@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType
 import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
 import com.fpwag.admin.infrastructure.CommonConstant
-import com.fpwag.admin.infrastructure.mybatis.support.model.BaseEntity
+import com.fpwag.admin.infrastructure.mybatis.base.BaseEntity
 
 /**
  * 系统日志实体

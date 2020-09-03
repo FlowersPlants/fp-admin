@@ -1,6 +1,6 @@
 package com.fpwag.admin.domain.dto.input.query
 
-import com.fpwag.admin.infrastructure.mybatis.support.dto.BaseQuery
+import com.fpwag.admin.infrastructure.mybatis.base.BaseQuery
 
 /**
  * 角色分页查询参数

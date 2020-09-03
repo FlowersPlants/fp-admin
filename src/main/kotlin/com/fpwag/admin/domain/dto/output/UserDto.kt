@@ -2,7 +2,7 @@ package com.fpwag.admin.domain.dto.output
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fpwag.admin.infrastructure.CommonConstant
-import com.fpwag.admin.infrastructure.mybatis.support.dto.DataDTO
+import com.fpwag.admin.infrastructure.mybatis.base.DataDTO
 
 /**
  * 用户信息输出，不包含密码信息

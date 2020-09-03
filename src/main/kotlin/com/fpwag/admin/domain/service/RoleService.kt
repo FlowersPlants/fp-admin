@@ -6,7 +6,7 @@ import com.fpwag.admin.domain.dto.input.command.RoleAuthCmd
 import com.fpwag.admin.domain.dto.input.command.RoleEditCmd
 import com.fpwag.admin.domain.dto.input.query.RoleQuery
 import com.fpwag.admin.domain.dto.output.RoleDto
-import com.fpwag.admin.infrastructure.mybatis.support.Service
+import com.fpwag.admin.infrastructure.mybatis.base.Service
 
 /**
  * 角色业务处理

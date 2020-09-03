@@ -11,6 +11,7 @@ import com.fpwag.admin.domain.entity.Menu
 import com.fpwag.admin.domain.mapper.MenuMapper
 import com.fpwag.admin.domain.repository.MenuRepository
 import com.fpwag.admin.domain.service.MenuService
+import com.fpwag.admin.infrastructure.mybatis.QueryUtils
 import com.fpwag.boot.core.TreeNode
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.core.utils.MapperUtils
@@ -64,23 +65,21 @@ class MenuServiceImpl : MenuService {
 
     @Cacheable
     override fun findList(query: MenuQuery?): MutableList<MenuDto> {
-        val list = this.repository.selectList(QueryWrapper<Menu>().apply {
+        val wrapper = QueryUtils.build<Menu, MenuQuery>(query, "name").apply {
             query?.let {
-                if (!it.name.isNullOrBlank()) {
-                    this.likeRight("name", it.name)
-                }
                 if (!it.path.isNullOrBlank()) {
                     this.likeRight("path", it.path)
                 }
                 if (!it.parentId.isNullOrBlank()) {
                     this.eq("parent_id", it.parentId)
                 }
-                if (!it.startTime.isNullOrBlank() && !it.endTime.isNullOrBlank()) {
-                    this.between("create_time", it.startTime, it.endTime)
+                if (it.createTime.isNotEmpty() && it.createTime.size == 2) {
+                    this.between("create_time", it.createTime[0], it.createTime[1])
                 }
             }
             this.orderByDesc("create_time")
-        })
+        }
+        val list = this.repository.selectList(wrapper)
         return this.mapper.toDto(list)
     }
 

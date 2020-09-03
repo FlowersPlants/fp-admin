@@ -1,8 +1,9 @@
-package com.fpwag.admin.infrastructure.mybatis.support.model
+package com.fpwag.admin.infrastructure.mybatis.base
 
 import com.baomidou.mybatisplus.annotation.FieldFill
 import com.baomidou.mybatisplus.annotation.TableField
 import com.fpwag.admin.infrastructure.CommonConstant
+import com.fpwag.admin.infrastructure.mybatis.base.BaseEntity
 import java.time.LocalDateTime
 
 /**

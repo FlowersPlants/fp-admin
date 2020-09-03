@@ -1,4 +1,4 @@
-package com.fpwag.admin.infrastructure.mybatis.support.dto
+package com.fpwag.admin.infrastructure.mybatis.base
 
 /**
  * 分页查询基础参数封装
@@ -10,6 +10,5 @@ abstract class BaseQuery {
     var keyword: String? = null
 
     // 创建时间段查询
-    var startTime: String? = null
-    var endTime: String? = null
+    var createTime: Array<String> = arrayOf()
 }

@@ -5,7 +5,7 @@ import com.fpwag.admin.domain.dto.input.command.MenuEditCmd
 import com.fpwag.admin.domain.dto.input.query.MenuQuery
 import com.fpwag.admin.domain.dto.output.MenuDto
 import com.fpwag.admin.domain.dto.output.MenuTree
-import com.fpwag.admin.infrastructure.mybatis.support.Service
+import com.fpwag.admin.infrastructure.mybatis.base.Service
 import com.fpwag.boot.core.TreeNode
 import com.fpwag.boot.core.constants.CommonConstants
 

@@ -4,7 +4,7 @@ import com.fpwag.admin.domain.dto.input.command.DeptAddCmd
 import com.fpwag.admin.domain.dto.input.command.DeptEditCmd
 import com.fpwag.admin.domain.dto.input.query.DeptQuery
 import com.fpwag.admin.domain.dto.output.DeptDto
-import com.fpwag.admin.infrastructure.mybatis.support.Service
+import com.fpwag.admin.infrastructure.mybatis.base.Service
 
 /**
  * 部门管理业务

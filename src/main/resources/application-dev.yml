@@ -52,7 +52,6 @@ fpwag-boot:
       contextPath: C:/upload
       persist: true
       del-object: true
-
 fp-admin:
   ignore-urls: /oss/**, /test/** # 仅测试用的
   image-code:
@@ -60,4 +59,4 @@ fp-admin:
   cors:
     enable: true
   jwt:
-    secretKey: ZmQ0ZGI5NjQ0MDQwY2I4MjMxY2Y3ZmI3MjdhN2ZmMjNhODViOTg1ZGE0NTBjMGM4NDA5NzYxMjdjOWMwYWRmZTBlZjlhNGY3ZTg4Y2U3YTE1ODVkZDU5Y2Y3OGYwZWE1NzUzNWQ2YjFjZDc0NGMxZWU2MmQ3MjY1NzJmNTE0MzI=
+    secret-key: MGViMDY5YjAxZmU0ZTZlNTFiZmJjMDA2MWExMGY1MWQwMGU1N2NiYjI2ZWY0MTAyZjEwNDI4ZGM0ZWMzZmVjZA==

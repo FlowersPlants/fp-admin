@@ -1,8 +1,6 @@
-package com.fpwag.admin.infrastructure.mybatis.support
+package com.fpwag.admin.infrastructure.mybatis.base
 
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
-import com.fpwag.admin.infrastructure.mybatis.support.dto.BaseDTO
-import com.fpwag.admin.infrastructure.mybatis.support.dto.BaseQuery
 import com.fpwag.boot.core.exception.CustomException
 import com.fpwag.boot.data.mybatis.PageResult
 import org.springframework.data.domain.Pageable
