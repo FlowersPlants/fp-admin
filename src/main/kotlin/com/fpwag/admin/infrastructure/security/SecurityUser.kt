@@ -22,13 +22,15 @@ class SecurityUser : User {
      */
     var deptId: String? = null
 
-    constructor(id: String, username: String, password: String, authorities: Collection<GrantedAuthority>)
+    constructor(id: String, deptId: String?, username: String, password: String, authorities: Collection<GrantedAuthority>)
             : super(username, password, authorities) {
         this.id = id
+        this.deptId = deptId
     }
 
-    constructor(id: String, username: String, password: String, enabled: Boolean, accountNonExpired: Boolean, credentialsNonExpired: Boolean, accountNonLocked: Boolean, authorities: Collection<GrantedAuthority>)
+    constructor(id: String, deptId: String?, username: String, password: String, enabled: Boolean, accountNonExpired: Boolean, credentialsNonExpired: Boolean, accountNonLocked: Boolean, authorities: Collection<GrantedAuthority>)
             : super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities) {
         this.id = id
+        this.deptId = deptId
     }
 }

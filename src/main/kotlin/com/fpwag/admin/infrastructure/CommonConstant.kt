@@ -24,9 +24,4 @@ object CommonConstant {
      * 统一管理的序列化号
      */
     const val SERIAL_VERSION = 520L
-
-    /**
-     * 受保护的密码
-     */
-    const val PROTECTED_PWD = "N/A"
 }

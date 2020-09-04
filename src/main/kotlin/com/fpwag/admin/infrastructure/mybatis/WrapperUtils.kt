@@ -4,7 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.baomidou.mybatisplus.core.toolkit.Wrappers
 import com.fpwag.admin.infrastructure.mybatis.base.BaseQuery
 
-object QueryUtils {
+/**
+ * mybatis plus wrapper包装工具
+ *
+ * @author fpwag
+ */
+object WrapperUtils {
     fun <T, Q : BaseQuery> build(query: Q?, columnName: String): QueryWrapper<T> {
         val wrapper = Wrappers.query<T>()
         wrapper.apply {

@@ -16,7 +16,7 @@ import com.fpwag.admin.domain.repository.UserRepository
 import com.fpwag.admin.domain.service.MenuService
 import com.fpwag.admin.domain.service.RoleService
 import com.fpwag.admin.domain.service.UserService
-import com.fpwag.admin.infrastructure.mybatis.QueryUtils
+import com.fpwag.admin.infrastructure.mybatis.WrapperUtils
 import com.fpwag.boot.autoconfigure.web.SpringContextHolder
 import com.fpwag.boot.core.constants.CommonConstants
 import com.fpwag.boot.core.exception.Assert
@@ -80,7 +80,7 @@ class UserServiceImpl : UserService {
     @Cacheable
     override fun findPage(query: UserQuery?, pageable: Pageable?): PageResult<UserDto> {
         val page = MybatisPageMapper.pageableToPage<User>(pageable)
-        val wrapper = QueryUtils.build<User, UserQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<User, UserQuery>(query, "name").apply {
             query?.let {
                 if (!it.deptId.isNullOrBlank()) {
                     this.eq("dept_id", it.deptId)

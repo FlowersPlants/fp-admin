@@ -39,6 +39,6 @@ class GlobalCorsWebFilter(private var cors: FpAdminProperties.Cors) : OncePerReq
     }
 
     override fun getOrder(): Int {
-        return Ordered.HIGHEST_PRECEDENCE + 10
+        return Ordered.HIGHEST_PRECEDENCE + 1
     }
 }

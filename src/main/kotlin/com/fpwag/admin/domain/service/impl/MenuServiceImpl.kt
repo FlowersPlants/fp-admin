@@ -11,7 +11,7 @@ import com.fpwag.admin.domain.entity.Menu
 import com.fpwag.admin.domain.mapper.MenuMapper
 import com.fpwag.admin.domain.repository.MenuRepository
 import com.fpwag.admin.domain.service.MenuService
-import com.fpwag.admin.infrastructure.mybatis.QueryUtils
+import com.fpwag.admin.infrastructure.mybatis.WrapperUtils
 import com.fpwag.boot.core.TreeNode
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.core.utils.MapperUtils
@@ -65,7 +65,7 @@ class MenuServiceImpl : MenuService {
 
     @Cacheable
     override fun findList(query: MenuQuery?): MutableList<MenuDto> {
-        val wrapper = QueryUtils.build<Menu, MenuQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<Menu, MenuQuery>(query, "name").apply {
             query?.let {
                 if (!it.path.isNullOrBlank()) {
                     this.likeRight("path", it.path)

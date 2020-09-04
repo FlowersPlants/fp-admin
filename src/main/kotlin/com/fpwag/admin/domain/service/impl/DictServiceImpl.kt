@@ -9,7 +9,7 @@ import com.fpwag.admin.domain.entity.Dict
 import com.fpwag.admin.domain.mapper.DictMapper
 import com.fpwag.admin.domain.repository.DictRepository
 import com.fpwag.admin.domain.service.DictService
-import com.fpwag.admin.infrastructure.mybatis.QueryUtils
+import com.fpwag.admin.infrastructure.mybatis.WrapperUtils
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.data.mybatis.MybatisPageMapper
 import com.fpwag.boot.data.mybatis.PageResult
@@ -35,7 +35,7 @@ class DictServiceImpl : DictService {
     @Cacheable
     override fun findPage(query: DictQuery?, pageable: Pageable?): PageResult<DictDto> {
         val page = MybatisPageMapper.pageableToPage<Dict>(pageable)
-        val wrapper = QueryUtils.build<Dict, DictQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<Dict, DictQuery>(query, "name").apply {
             query?.let {
                 if (!it.code.isNullOrBlank()) {
                     this.eq("code", it.code)

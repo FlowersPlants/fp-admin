@@ -26,16 +26,6 @@ class CommandListener {
 
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
-//
-//    @EventListener(value = [UserCreatedEvent::class])
-//    fun handle(event: UserCreatedEvent) {
-//        val entity = event.source as User
-//        entity.password = this.passwordEncoder.encode(CommonConstants.DEFAULT_USER_PWD)
-//        val i = this.repository.updateById(entity)
-//        if (logger.isInfoEnabled && i > 0) {
-//            logger.info("用户[${entity.username}]初始密码设置成功！")
-//        }
-//    }
 
     /**
      * 更新密码处理器

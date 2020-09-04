@@ -9,7 +9,7 @@ import com.fpwag.admin.domain.entity.Dept
 import com.fpwag.admin.domain.mapper.DeptMapper
 import com.fpwag.admin.domain.repository.DeptRepository
 import com.fpwag.admin.domain.service.DeptService
-import com.fpwag.admin.infrastructure.mybatis.QueryUtils
+import com.fpwag.admin.infrastructure.mybatis.WrapperUtils
 import com.fpwag.boot.core.exception.Assert
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
@@ -37,7 +37,7 @@ class DeptServiceImpl : DeptService {
 
     @Cacheable
     override fun findList(query: DeptQuery?): MutableList<DeptDto> {
-        val wrapper = QueryUtils.build<Dept, DeptQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<Dept, DeptQuery>(query, "name").apply {
             query?.let {
                 if (!it.parentId.isNullOrBlank()) {
                     this.eq("parent_id", it.parentId)

@@ -11,7 +11,7 @@ import com.fpwag.admin.domain.entity.Role
 import com.fpwag.admin.domain.mapper.RoleMapper
 import com.fpwag.admin.domain.repository.RoleRepository
 import com.fpwag.admin.domain.service.RoleService
-import com.fpwag.admin.infrastructure.mybatis.QueryUtils
+import com.fpwag.admin.infrastructure.mybatis.WrapperUtils
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.data.mybatis.MybatisPageMapper
 import com.fpwag.boot.data.mybatis.PageResult
@@ -37,7 +37,7 @@ class RoleServiceImpl : RoleService {
     @Cacheable
     override fun findPage(query: RoleQuery?, pageable: Pageable?): PageResult<RoleDto> {
         val page = MybatisPageMapper.pageableToPage<Role>(pageable)
-        val wrapper = QueryUtils.build<Role, RoleQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<Role, RoleQuery>(query, "name").apply {
             query?.let {
                 if (it.level != null) {
                     this.eq("level", it.level)
