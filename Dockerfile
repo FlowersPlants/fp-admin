@@ -6,7 +6,7 @@ FROM java:8
 RUN echo "Asia/Chongqing" > /etc/timezone
 
 # 此配置一般用于文件存储时的临时路径配置
- VOLUME /tmp
+VOLUME /fpwag/oss
 
 ARG JAR_FILE
 ADD ${JAR_FILE} app.jar
