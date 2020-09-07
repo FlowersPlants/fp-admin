@@ -1,16 +1,11 @@
 package com.fpwag.admin.domain.dto.input.command
 
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
 
 class UserUpdatePwdCmd {
-    @NotBlank(message = "用户账号不能为空")
-    var username: String? = null
+    @NotBlank(message = "旧密码不能为空")
+    var oldPass: String? = null
 
-    @NotNull(message = "状态不能为null")
-    var oldEncryptPwd: String? = null
-
-    var encryptPwd: String? = null
-
-    var confirmEncryptPwd: String? = null
+    @NotBlank(message = "新密码不能为空")
+    var newPass: String? = null
 }

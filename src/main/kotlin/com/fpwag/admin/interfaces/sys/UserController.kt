@@ -1,7 +1,6 @@
 package com.fpwag.admin.interfaces.sys
 
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
-import com.fpwag.admin.domain.dto.input.UserCommand
 import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
 import com.fpwag.admin.domain.dto.input.command.UserResetPwdCmd
@@ -10,12 +9,14 @@ import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.dto.output.UserDto
 import com.fpwag.admin.domain.service.UserService
 import com.fpwag.admin.infrastructure.security.SecurityUtils
+import com.fpwag.boot.autoconfigure.oss.StorageService
 import com.fpwag.boot.logging.annotation.SystemLog
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Pageable
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 /**
  * 用户管理
@@ -29,6 +30,9 @@ import org.springframework.web.bind.annotation.*
 class UserController {
     @Autowired
     private lateinit var service: UserService
+
+    @Autowired
+    private lateinit var storageService: StorageService
 
     @GetMapping("info")
     fun getInfo(): Any {
@@ -76,39 +80,27 @@ class UserController {
     @PreAuthorize("@pms.hasPermission('sys:user:repwd')")
     @SystemLog(value = "重置密码", type = SystemLog.Type.UPDATE)
     @PutMapping("repwd")
-    fun resetPwd(@RequestBody command: UserResetPwdCmd): String {
+    fun resetPwd(@Validated @RequestBody command: UserResetPwdCmd): String {
         return this.service.resetPwd(command)
-    }
-
-    // 以下为个人信息修改接口
-    @SystemLog(value = "修改密码", type = SystemLog.Type.UPDATE)
-    @PutMapping(value = ["{userId}/update-pwd"])
-    @Deprecated("暂时去掉", ReplaceWith("this.updatePwd(username, command)"))
-    fun updatePwd(@PathVariable("userId") userId: String, oldEncryptPwd: String, encryptPwd: String): Any? {
-        return null
     }
 
     @SystemLog(value = "修改状态", type = SystemLog.Type.UPDATE)
     @PutMapping(value = ["us"])
-    fun updateStatus(@RequestBody command: UpdateStatusCmd): Any? {
+    fun updateStatus(@Validated @RequestBody command: UpdateStatusCmd): Any? {
         return this.service.updateStatus(command)
     }
 
+    // 以下为个人信息修改接口
     @SystemLog(value = "修改密码", type = SystemLog.Type.UPDATE)
     @PutMapping("up")
-    fun updatePwd(@RequestBody command: UserUpdatePwdCmd): Any? {
-        return null
-    }
-
-    @SystemLog(value = "修改邮箱", type = SystemLog.Type.UPDATE)
-    @PutMapping(value = ["{id}/ue"])
-    fun updateEmail(@PathVariable("id") id: String, email: String): Any? {
-        return this.service.updateInfo(UserCommand(id, UserCommand.Type.EMAIL, email))
+    fun updatePwd(@Validated @RequestBody command: UserUpdatePwdCmd): Any? {
+        return this.service.updatePwd(command)
     }
 
     @SystemLog(value = "修改头像", type = SystemLog.Type.UPDATE)
-    @PutMapping(value = ["{id}/ua"])
-    fun updateAvatar(@PathVariable("id") id: String, avatar: String): Any? {
-        return this.service.updateInfo(UserCommand(id, UserCommand.Type.AVATAR, avatar))
+    @PostMapping(value = ["ua"])
+    fun updateAvatar(@RequestBody @RequestParam("avatar") avatar: MultipartFile): Any? {
+        val meta = this.storageService.upload(avatar)
+        return this.service.updateAvatar(meta.accessUrl)
     }
 }

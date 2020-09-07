@@ -35,7 +35,7 @@ class DictServiceImpl : DictService {
     @Cacheable
     override fun findPage(query: DictQuery?, pageable: Pageable?): PageResult<DictDto> {
         val page = MybatisPageMapper.pageableToPage<Dict>(pageable)
-        val wrapper = WrapperUtils.build<Dict, DictQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<Dict, DictQuery>(query).apply {
             query?.let {
                 if (!it.code.isNullOrBlank()) {
                     this.eq("code", it.code)

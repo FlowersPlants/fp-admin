@@ -1,9 +1,9 @@
 package com.fpwag.admin.domain.service
 
-import com.fpwag.admin.domain.dto.input.UserCommand
-import com.fpwag.admin.domain.dto.input.command.UserResetPwdCmd
 import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
+import com.fpwag.admin.domain.dto.input.command.UserResetPwdCmd
+import com.fpwag.admin.domain.dto.input.command.UserUpdatePwdCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.dto.output.UserDto
 import com.fpwag.admin.infrastructure.mybatis.base.Service
@@ -51,16 +51,8 @@ interface UserService : Service<UserQuery, UserDto> {
      * 修改其他非必要信息
      *
      * @param command 更新信息请求参数
-     * @see #updateInfo
      */
     fun update(command: UserEditCmd)
-
-    /**
-     * 修改用户信息，包括邮箱、头像、手机号、密码等关键信息
-     *
-     * @param command 修改数据请求参数
-     */
-    fun updateInfo(command: UserCommand)
 
     /**
      * 重置密码
@@ -68,4 +60,18 @@ interface UserService : Service<UserQuery, UserDto> {
      * @param command 请求参数，可以同时重置多个用户得密码
      */
     fun resetPwd(command: UserResetPwdCmd): String
+
+    /**
+     * 修改密码
+     *
+     * @param command 密码参数
+     */
+    fun updatePwd(command: UserUpdatePwdCmd)
+
+    /**
+     * 修改头像
+     *
+     * @param avatar 头像地址
+     */
+    fun updateAvatar(avatar: String)
 }

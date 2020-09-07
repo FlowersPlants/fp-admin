@@ -37,7 +37,7 @@ class RoleServiceImpl : RoleService {
     @Cacheable
     override fun findPage(query: RoleQuery?, pageable: Pageable?): PageResult<RoleDto> {
         val page = MybatisPageMapper.pageableToPage<Role>(pageable)
-        val wrapper = WrapperUtils.build<Role, RoleQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<Role, RoleQuery>(query).apply {
             query?.let {
                 if (it.level != null) {
                     this.eq("level", it.level)

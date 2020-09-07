@@ -6,10 +6,10 @@ import org.springframework.security.core.userdetails.User
 
 /**
  * 系统安全认证用户
+ *
  * @author FlowersPlants
  * @since v1
  */
-@Deprecated(message = "暂时没用")
 class SecurityUser : User {
     companion object {
         private const val serialVersionUID = CommonConstant.SERIAL_VERSION

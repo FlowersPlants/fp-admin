@@ -37,7 +37,7 @@ class DeptServiceImpl : DeptService {
 
     @Cacheable
     override fun findList(query: DeptQuery?): MutableList<DeptDto> {
-        val wrapper = WrapperUtils.build<Dept, DeptQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<Dept, DeptQuery>(query).apply {
             query?.let {
                 if (!it.parentId.isNullOrBlank()) {
                     this.eq("parent_id", it.parentId)

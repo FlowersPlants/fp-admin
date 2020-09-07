@@ -65,7 +65,7 @@ class MenuServiceImpl : MenuService {
 
     @Cacheable
     override fun findList(query: MenuQuery?): MutableList<MenuDto> {
-        val wrapper = WrapperUtils.build<Menu, MenuQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<Menu, MenuQuery>(query).apply {
             query?.let {
                 if (!it.path.isNullOrBlank()) {
                     this.likeRight("path", it.path)

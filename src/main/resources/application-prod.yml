@@ -45,6 +45,15 @@ fpwag-boot:
       - key: sys_user
         ttl: 259200000 # 3天
     global-ttl: 86400000 # 全局过期时间设置 1天
+  oss: # 对象存储配置，使用本地存储
+    enable: true
+    local:
+      enable: true
+      endpoint: http://admin-api.fpwag.com
+      bucketName: oss
+      contextPath: /tmp
+      persist: true
+      del-object: true
 
 fp-admin:
   image-code:

@@ -3,10 +3,10 @@ package com.fpwag.admin.domain.service.impl
 import cn.hutool.core.util.RandomUtil
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
-import com.fpwag.admin.domain.dto.input.UserCommand
 import com.fpwag.admin.domain.dto.input.command.UserAddCmd
 import com.fpwag.admin.domain.dto.input.command.UserEditCmd
 import com.fpwag.admin.domain.dto.input.command.UserResetPwdCmd
+import com.fpwag.admin.domain.dto.input.command.UserUpdatePwdCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.dto.output.UserDto
 import com.fpwag.admin.domain.entity.User
@@ -17,6 +17,7 @@ import com.fpwag.admin.domain.service.MenuService
 import com.fpwag.admin.domain.service.RoleService
 import com.fpwag.admin.domain.service.UserService
 import com.fpwag.admin.infrastructure.mybatis.WrapperUtils
+import com.fpwag.admin.infrastructure.security.SecurityUtils
 import com.fpwag.boot.autoconfigure.web.SpringContextHolder
 import com.fpwag.boot.core.constants.CommonConstants
 import com.fpwag.boot.core.exception.Assert
@@ -27,6 +28,7 @@ import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Pageable
+import org.springframework.security.crypto.factory.PasswordEncoderFactories
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -61,7 +63,7 @@ class UserServiceImpl : UserService {
     }
 
     override fun findByUsername(username: String?): UserDto? {
-        val entity = this.findOne(username = username)
+        val entity = this.findOne(UserQuery(username = username))
         return this.mapper.toDto(entity)
     }
 
@@ -73,14 +75,14 @@ class UserServiceImpl : UserService {
 
     @Cacheable(key = "'id_' + #p0")
     override fun findById(id: String?): UserDto? {
-        val entity = this.findOne(id = id)
+        val entity = this.findOne(UserQuery(id = id))
         return this.mapper.toDto(entity)
     }
 
     @Cacheable
     override fun findPage(query: UserQuery?, pageable: Pageable?): PageResult<UserDto> {
         val page = MybatisPageMapper.pageableToPage<User>(pageable)
-        val wrapper = WrapperUtils.build<User, UserQuery>(query, "name").apply {
+        val wrapper = WrapperUtils.build<User, UserQuery>(query).apply {
             query?.let {
                 if (!it.deptId.isNullOrBlank()) {
                     this.eq("dept_id", it.deptId)
@@ -127,19 +129,6 @@ class UserServiceImpl : UserService {
 
     @CacheEvict(allEntries = true)
     @Transactional
-    override fun updateInfo(command: UserCommand) {
-        val user = User(command.id)
-        when (command.type) {
-            UserCommand.Type.PWD -> user.password = command.value
-            UserCommand.Type.EMAIL -> user.email = command.value
-            UserCommand.Type.MOBILE -> user.mobile = command.value
-            UserCommand.Type.AVATAR -> user.avatar = command.value
-        }
-        this.repository.updateById(user)
-    }
-
-    @CacheEvict(allEntries = true)
-    @Transactional
     override fun resetPwd(command: UserResetPwdCmd): String {
         var defaultPwd = "fpwag1234!"
         var encryptPassword = CommonConstants.DEFAULT_USER_PWD
@@ -155,6 +144,28 @@ class UserServiceImpl : UserService {
         }
         SpringContextHolder.publishEvent(UpdatePwdEvent(list))
         return defaultPwd
+    }
+
+    @CacheEvict(allEntries = true)
+    @Transactional
+    override fun updatePwd(command: UserUpdatePwdCmd) {
+        val passwordEncode = PasswordEncoderFactories.createDelegatingPasswordEncoder()
+        val username = SecurityUtils.getUsername()
+        val user = this.findOne(UserQuery(username = username))
+        val old = DigestUtils.md5DigestAsHex(command.oldPass!!.toByteArray())
+        Assert.isTrue(passwordEncode.matches(old, user?.password), "原密码不正确")
+
+        user?.password = DigestUtils.md5DigestAsHex(command.newPass!!.toByteArray())
+        SpringContextHolder.publishEvent(UpdatePwdEvent(mutableListOf(user)))
+    }
+
+    @CacheEvict(allEntries = true)
+    @Transactional
+    override fun updateAvatar(avatar: String) {
+        val username = SecurityUtils.getUsername()
+        val user = this.findOne(UserQuery(username = username))
+        user?.avatar = avatar
+        this.repository.updateById(user)
     }
 
     @CacheEvict(allEntries = true)
@@ -176,28 +187,29 @@ class UserServiceImpl : UserService {
     /**
      * 根据用户唯一信息获取唯一用户
      *
-     * @param username 用户名
-     * @param email 邮箱
-     * @param mobile 手机号
+     * @param query 查询参数
      * @return 用户信息
      */
-    private fun findOne(id: String? = null, username: String? = null, email: String? = null, mobile: String? = null): User? {
-        if (id.isNullOrBlank() && username.isNullOrBlank() && email.isNullOrBlank() && mobile.isNullOrBlank()) {
-            return null
+    private fun findOne(query: UserQuery?): User? {
+        return try {
+            this.repository.selectOne(QueryWrapper<User>().apply {
+                query?.let {
+                    if (!it.id.isNullOrBlank()) {
+                        this.eq("id", it.id)
+                    }
+                    if (!it.username.isNullOrBlank()) {
+                        this.eq("username", it.username)
+                    }
+                    if (!it.email.isNullOrBlank()) {
+                        this.eq("email", it.email)
+                    }
+                    if (!it.mobile.isNullOrBlank()) {
+                        this.eq("mobile", it.mobile)
+                    }
+                }
+            })
+        } catch (e: Exception) {
+            null
         }
-        return this.repository.selectOne(QueryWrapper<User>().apply {
-            if (!id.isNullOrBlank()) {
-                this.eq("id", id)
-            }
-            if (!username.isNullOrBlank()) {
-                this.eq("username", username)
-            }
-            if (!email.isNullOrBlank()) {
-                this.eq("email", email)
-            }
-            if (!mobile.isNullOrBlank()) {
-                this.eq("mobile", mobile)
-            }
-        })
     }
 }
