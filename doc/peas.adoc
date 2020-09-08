@@ -85,3 +85,7 @@ if (count == 0) then -- 判断是否重入次数是否已经为0
     return nil;
 end;
 ----
+
+=== 4.对象存储oss访问链接无效问题
+访问地址如下：http://admin-api.fpwag.com/oss/{key}，此时页面渲染无效，因为此链接返回结果为json
+解决方案：暂无

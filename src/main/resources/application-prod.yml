@@ -49,9 +49,9 @@ fpwag-boot:
     enable: true
     local:
       enable: true
-      endpoint: http://admin.fpwag.com
+      endpoint: http://admin-api.fpwag.com
       bucketName: oss
-      contextPath: /fpwag/oss
+      contextPath: /tmp
       persist: true
       del-object: true
 
