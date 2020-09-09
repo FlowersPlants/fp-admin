@@ -49,13 +49,14 @@ fpwag-boot:
     enable: true
     local:
       enable: true
-      endpoint: http://admin-api.fpwag.com
-      bucketName: oss
+      endpoint: http://oss.fpwag.com
+      bucketName: file
       contextPath: /tmp
       persist: true
       del-object: true
 
 fp-admin:
+  ignore-urls: /file/** # 忽略掉对象存储的bucketName路径配置
   image-code:
     enable: true
   cors:
