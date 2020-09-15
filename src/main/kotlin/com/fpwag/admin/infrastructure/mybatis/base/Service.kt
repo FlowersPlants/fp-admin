@@ -1,7 +1,7 @@
 package com.fpwag.admin.infrastructure.mybatis.base
 
 import com.fpwag.admin.domain.dto.input.UpdateStatusCmd
-import com.fpwag.boot.core.exception.CustomException
+import com.fpwag.boot.core.exception.BaseException
 import com.fpwag.boot.data.mybatis.PageResult
 import org.springframework.data.domain.Pageable
 
@@ -29,7 +29,7 @@ interface Service<Q : BaseQuery, D : BaseDTO> {
      * @return PageResult<D> 分页数据
      */
     fun findPage(query: Q?, pageable: Pageable?): PageResult<D> {
-        throw CustomException("Method [findPage] not implemented.")
+        throw BaseException("Method [findPage] not implemented.")
     }
 
     /**
