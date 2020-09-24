@@ -1,6 +1,7 @@
 package com.fpwag.admin.infrastructure.config
 
 import com.fpwag.admin.infrastructure.CommonConstant
+import com.fpwag.boot.core.constants.CommonConstants
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 /**
@@ -110,5 +111,13 @@ class FpAdminProperties {
          * token encode algorithm, default hs256.
          */
         var algorithm: String = CommonConstant.DEFAULT_ALGORITHM
+        /**
+         * token过期时间，单位：s
+         */
+        var expiration: Long = CommonConstants.REDIS_CACHE_TTL
+        /**
+         * 记住我模式下token过期时间
+         */
+        var rememberExpiration: Long = 7 * CommonConstants.REDIS_CACHE_TTL
     }
 }

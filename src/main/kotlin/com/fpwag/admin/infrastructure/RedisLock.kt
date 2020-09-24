@@ -12,8 +12,8 @@ import java.util.Collections.singletonList
 /**
  * redis分布式锁（可重入锁，基于lua脚本）
  * 也叫做递归锁，指的是在同一线程内，外层函数获得锁之后，内层递归函数仍然可以获取到该锁。换一种说法：同一个线程再次进入同步代码时，可以使用自己已获取到的锁。可重入锁可以避免因同一线程中多次获取锁而导致死锁发生。像synchronized就是一个重入锁，它是通过moniter函数记录当前线程信息来实现的。实现可重入锁需要考虑两点：
-　　　获取锁：首先尝试获取锁，如果获取失败，判断这个锁是否是自己的，如果是则允许再次获取， 而且必须记录重复获取锁的次数。
-　　　释放锁：释放锁不能直接删除了，因为锁是可重入的，如果锁进入了多次，在内层直接删除锁， 导致外部的业务在没有锁的情况下执行，会有安全问题。因此必须获取锁时累计重入的次数，释放时则减去重入次数，如果减到0，则可以删除锁。
+ *　　获取锁：首先尝试获取锁，如果获取失败，判断这个锁是否是自己的，如果是则允许再次获取， 而且必须记录重复获取锁的次数。
+ *　　释放锁：释放锁不能直接删除了，因为锁是可重入的，如果锁进入了多次，在内层直接删除锁， 导致外部的业务在没有锁的情况下执行，会有安全问题。因此必须获取锁时累计重入的次数，释放时则减去重入次数，如果减到0，则可以删除锁。
  *
  * @author fpwag
  */
@@ -24,11 +24,11 @@ object RedisLock {
 
     init {
         // 加载获取锁的脚本
-        LOCK_SCRIPT.setScriptSource(ResourceScriptSource(ClassPathResource("scripts/lock.lua")))
+        LOCK_SCRIPT.setScriptSource(ResourceScriptSource(ClassPathResource("lock.lua")))
         LOCK_SCRIPT.resultType = Long::class.java
 
         // 加载释放锁的脚本
-        UNLOCK_SCRIPT.setScriptSource(ResourceScriptSource(ClassPathResource("scripts/unlock.lua")))
+        UNLOCK_SCRIPT.setScriptSource(ResourceScriptSource(ClassPathResource("unlock.lua")))
     }
 
     /**

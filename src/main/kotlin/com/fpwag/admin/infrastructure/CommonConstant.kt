@@ -11,6 +11,7 @@ object CommonConstant {
     const val DEFAULT_TOKEN_PREFIX = "Bearer "
     // 加密算法
     const val DEFAULT_ALGORITHM = "hs512"
+    const val REDIS_JWT_TOKEN = "user:jwt_token:"
 
     // redis key
     const val IMG_CODE_KEY = "img-code-"
