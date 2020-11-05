@@ -11,14 +11,14 @@ import org.springframework.data.domain.Pageable
  *
  * @author fpwag
  */
-interface Service<Q : BaseQuery, D : BaseDTO> {
+interface Service<Q : BaseQuery, DTO : BaseDTO> {
     /**
      * 根据id查找数据信息，并返回dto对象
      *
      * @param id 业务id，为null时返回null
      * @return dto对象，id为null时返回null
      */
-    fun findById(id: String?): D?
+    fun findById(id: String?): DTO?
 
     /**
      * 分页接口，直接返回分页结果对象，这里提供默认实现（抛出未实现异常）<br>
@@ -28,7 +28,7 @@ interface Service<Q : BaseQuery, D : BaseDTO> {
      * @param pageable 分页参数
      * @return PageResult<D> 分页数据
      */
-    fun findPage(query: Q?, pageable: Pageable?): PageResult<D> {
+    fun findPage(query: Q?, pageable: Pageable?): PageResult<DTO> {
         throw BaseException("Method [findPage] not implemented.")
     }
 

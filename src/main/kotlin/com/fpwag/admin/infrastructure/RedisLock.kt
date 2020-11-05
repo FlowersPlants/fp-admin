@@ -24,28 +24,28 @@ object RedisLock {
 
     init {
         // 加载获取锁的脚本
-        LOCK_SCRIPT.setScriptSource(ResourceScriptSource(ClassPathResource("lock.lua")))
+        LOCK_SCRIPT.setScriptSource(ResourceScriptSource(ClassPathResource("static/lock.lua")))
         LOCK_SCRIPT.resultType = Long::class.java
 
         // 加载释放锁的脚本
-        UNLOCK_SCRIPT.setScriptSource(ResourceScriptSource(ClassPathResource("unlock.lua")))
+        UNLOCK_SCRIPT.setScriptSource(ResourceScriptSource(ClassPathResource("static/unlock.lua")))
     }
 
     /**
      * 获取锁
      *
      * @param lockName 锁名称
-     * @param releaseTime 超时时间(单位:秒)
+     * @param time 超时时间(单位:秒)，参数类型必须是Object，值必须是long或int
      * @return key 解锁标识
      */
-    fun tryLock(lockName: String?, releaseTime: String?): String? {
+    fun tryLock(lockName: String?, time: Any?): String? {
         val key: String = IdUtils.uuid()
         // 执行脚本
         // 存入的线程信息的前缀，防止与其它JVM中线程信息冲突
         val result: Long = redisTemplate.execute(
                 LOCK_SCRIPT,
                 Collections.singletonList(lockName),
-                key + Thread.currentThread().id, releaseTime)
+                key + Thread.currentThread().id, time)
         // 判断结果
         return if (result.toInt() == 1) key else null
     }

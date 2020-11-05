@@ -29,8 +29,7 @@ interface LogService {
     fun save(log: OperationLog?)
 
     /**
-     * 清空日志，利用truncate操作，无法恢复，谨慎使用
-     * tip: 无事务
+     * 清空日志，利用truncate操作，无法恢复、无事务，谨慎使用
      */
     fun clear()
 }
