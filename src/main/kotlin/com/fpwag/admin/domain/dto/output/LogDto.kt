@@ -19,6 +19,7 @@ class LogDto : BaseDTO() {
     var params: String? = null              // 操作提交的数据
     var executeResult: String? = null       // 执行结果
     var executeTime: Long? = null           // 执行所用时间
+    var exceptionDetail: String? = null
     var type: Int? = null                   // 日志类型
 
     var remoteAddr: String? = null          // 操作IP地址

@@ -10,7 +10,7 @@ import com.fpwag.admin.domain.dto.input.command.UserUpdatePwdCmd
 import com.fpwag.admin.domain.dto.input.query.UserQuery
 import com.fpwag.admin.domain.dto.output.UserDto
 import com.fpwag.admin.domain.entity.User
-import com.fpwag.admin.domain.event.UpdatePwdEvent
+import com.fpwag.admin.domain.dto.UpdatePwdEvent
 import com.fpwag.admin.domain.mapper.UserMapper
 import com.fpwag.admin.domain.repository.UserRepository
 import com.fpwag.admin.domain.service.MenuService
@@ -19,7 +19,6 @@ import com.fpwag.admin.domain.service.UserService
 import com.fpwag.admin.infrastructure.mybatis.WrapperUtils
 import com.fpwag.admin.infrastructure.security.SecurityUtils
 import com.fpwag.boot.autoconfigure.web.SpringContextHolder
-import com.fpwag.boot.core.constants.CommonConstants
 import com.fpwag.boot.core.exception.Assert
 import com.fpwag.boot.data.mybatis.MybatisPageMapper
 import com.fpwag.boot.data.mybatis.PageResult
@@ -131,7 +130,7 @@ class UserServiceImpl : UserService {
     @Transactional
     override fun resetPwd(command: UserResetPwdCmd): String {
         var defaultPwd = "fpwag1234!"
-        var encryptPassword = CommonConstants.DEFAULT_USER_PWD
+        var encryptPassword = DigestUtils.md5DigestAsHex(defaultPwd.toByteArray())
         if (command.random) {
             defaultPwd = RandomUtil.randomString(12)
             encryptPassword = DigestUtils.md5DigestAsHex(defaultPwd.toByteArray())

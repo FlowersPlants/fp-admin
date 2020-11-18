@@ -1,7 +1,7 @@
 package com.fpwag.admin.application.event
 
+import com.fpwag.admin.domain.dto.UpdatePwdEvent
 import com.fpwag.admin.domain.entity.User
-import com.fpwag.admin.domain.event.UpdatePwdEvent
 import com.fpwag.admin.domain.repository.UserRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

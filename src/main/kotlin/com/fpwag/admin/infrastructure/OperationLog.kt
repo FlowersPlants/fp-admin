@@ -16,14 +16,14 @@ class OperationLog : Logging {
     var remoteAddr: String? = null
     var userAgent: String? = null
 
-    constructor(remoteAddr: String?, userAgent: String?, traceId: String?, title: String?, type: Int, requestUri: String?, method: String?, params: String?, executeResult: String?, executeTime: Long)
-            : super(traceId, title, type, requestUri, method, params, executeResult, executeTime) {
+    constructor(remoteAddr: String?, userAgent: String?, traceId: String?, title: String?, type: Int, requestUri: String?, method: String?, params: String?, executeResult: String?, executeTime: Long, exceptionDetail: String?)
+            : super(traceId, title, type, requestUri, method, params, executeResult, executeTime, exceptionDetail) {
         this.remoteAddr = remoteAddr
         this.userAgent = userAgent
     }
 
     constructor(remoteAddr: String?, userAgent: String?, details: LoggingDetails)
-            : super(details.traceId, details.title, details.type, details.requestUri, details.method, details.params, details.executeResult, details.executeTime) {
+            : super(details.traceId, details.title, details.type, details.requestUri, details.method, details.params, details.executeResult, details.executeTime, details.exceptionDetail) {
         this.remoteAddr = remoteAddr
         this.userAgent = userAgent
     }

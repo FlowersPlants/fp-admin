@@ -1,4 +1,4 @@
-package com.fpwag.admin.domain.event
+package com.fpwag.admin.domain.dto
 
 import org.springframework.context.ApplicationEvent
 
