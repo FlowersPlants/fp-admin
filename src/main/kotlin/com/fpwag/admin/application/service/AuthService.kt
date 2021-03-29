@@ -5,7 +5,7 @@ import cn.hutool.captcha.generator.MathGenerator
 import com.fpwag.admin.domain.dto.input.LoginUser
 import com.fpwag.admin.infrastructure.config.FpAdminProperties
 import com.fpwag.admin.infrastructure.security.TokenProvider
-import com.fpwag.boot.core.exception.Assert
+import com.fpwag.boot.core.exception.BaseException
 import com.fpwag.boot.core.utils.IdUtils
 import com.fpwag.boot.data.redis.RedisOperator
 import org.slf4j.Logger
@@ -70,8 +70,12 @@ class AuthService(private var properties: FpAdminProperties) {
         if (this.properties.imageCode.enable) {
             val code = this.redisOperation.get(loginUser.uuid) as? String
             this.redisOperation.del(loginUser.uuid)
-            Assert.isTrue(!code.isNullOrBlank(), "验证码不存在或已过期")
-            Assert.isTrue(!loginUser.code.isNullOrBlank() && this.captcha.generator.verify(code, loginUser.code), "验证码错误")
+            if (code.isNullOrBlank()) {
+                throw BaseException("验证码不存在或已过期")
+            }
+            if (loginUser.code.isNullOrBlank() || !this.captcha.generator.verify(code, loginUser.code)) {
+                throw BaseException("验证码错误")
+            }
         }
 
         val authenticationToken = UsernamePasswordAuthenticationToken(loginUser.username, loginUser.password)

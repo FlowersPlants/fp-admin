@@ -14,6 +14,8 @@ class LoginUser {
     @NotBlank(message = "用户密码不能为空")
     var password: String? = null
 
+    var rememberMe: Boolean? = false
+
     var code: String? = null
     var uuid: String? = null
 }

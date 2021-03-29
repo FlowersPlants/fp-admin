@@ -23,7 +23,7 @@ class AuthController {
         return this.authService.getCode()
     }
 
-    @SystemLog(value = "登录", type = SystemLog.Type.LOGIN)
+    @SystemLog(value = "登录", type = SystemLog.Type.LOGIN, saveResult = false)
     @PostMapping("login")
     fun login(@Validated @RequestBody logUser: LoginUser): String {
         return this.authService.login(logUser)

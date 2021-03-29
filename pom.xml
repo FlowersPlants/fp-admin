@@ -201,7 +201,7 @@
     <repositories>
         <repository>
             <id>nexus-public</id>
-            <url>http://repo.fpwag.com/repository/maven-public</url>
+            <url>http://42.192.134.79:10081/repository/maven-public</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

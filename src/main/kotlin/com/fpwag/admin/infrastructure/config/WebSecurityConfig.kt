@@ -1,7 +1,7 @@
 package com.fpwag.admin.infrastructure.config
 
-import com.fpwag.admin.infrastructure.security.SecurityAuthorizationFilter
 import com.fpwag.admin.infrastructure.security.FpwagAuthenticationEntryPoint
+import com.fpwag.admin.infrastructure.security.SecurityAuthorizationFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -10,14 +10,13 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import kotlin.jvm.Throws
 
 @Configuration
-@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired
@@ -62,15 +61,11 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         this.properties.ignoreUrls.forEach { registry.antMatchers(it).permitAll() }
 
         registry.anyRequest().authenticated()  // 其他任何请求，登录后可访问
-
                 .and().formLogin().disable() // 禁用表单登录
-
-                .logout().permitAll()  // 配置登出相关
-
-                .and().csrf().disable() // 关闭csrf
-
+                .csrf().disable() // 关闭csrf
                 .sessionManagement().disable() // 基于token，所以不需要session
-
-                .addFilterBefore(this.securityAuthorizationFilter(), UsernamePasswordAuthenticationFilter::class.java)
+                .logout().permitAll()  // 配置登出相关
+                .and().rememberMe().rememberMeParameter("rememberMe") // rememberMe 支持
+                .and().addFilterBefore(this.securityAuthorizationFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 }
